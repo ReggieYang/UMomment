@@ -1,18 +1,21 @@
 import json
-
+from sqlalchemy import *
 import datetime
 
-
+DATABASEURI = "postgresql://ky2371:naruhodo@35.196.90.148/proj1part2"
+db = create_engine(DATABASEURI)
+db.echo = False  #No logging
+metadata = MetaData(db)
 def create(student):
     return
 
 
 def find(id):
-    student = {"id": 1, "nick_name": "Xfl",
-               "avatar": 'https://pbs.twimg.com/profile_images/821488066250608641/01uU3Y5N_400x400.jpg',
-               "school_id": 1, "since": datetime.datetime.now(), "email": "xfl@com", "password": "123",
-               "introduction": "hahaha"}
-    return student
+    student = Table('student', metadata, autoload=True)
+    result = student.select(student.c.user_id == id)
+    resultExe = result.execute()
+    rs = resultExe.fetchone()
+    return rs
 
 
 def update(student):
