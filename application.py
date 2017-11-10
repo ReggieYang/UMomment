@@ -1,30 +1,37 @@
 import json
 
 import flask
-from flask import Flask, request
+import os
+from flask import Flask, request, render_template
 from flask_cors import CORS
 
-from logic.student_logic import test_login
+from logic.student_logic import login
 
-application = Flask(__name__)
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+application = Flask(__name__, template_folder=tmpl_dir)
 CORS(application)
 
 
 @application.route('/')
-def hello_world():
-    return "Hello, welcome to twittMap API!"
+def home_page():
+    return render_template('login.html')
 
 
-@application.route('/test/', methods=["GET", "POST"])
-def test():
+@application.route('/student/login/', methods=['POST'])
+def student_login():
     if request.method == "POST":
-        username = request.form['username']
+        id = request.form['id']
         password = request.form['password']
-        res = {"un": username, "pw": password}
-        # resp = flask.Response({"un": username, "pw": password})
-        # resp.headers['Content-Type'] = 'application/json'
-        return test_login(username, password)
-    return 'hahaha'
+        student = login(id, password)
+        print(id)
+        print(password)
+        if student is not None:
+            context = dict(data=student)
+            return render_template('user.html', **context)
+
+        else:
+            # return render_template('error.html')
+            return 'error'
 
 
 # @application.route('/search/<keyword>')

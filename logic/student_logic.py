@@ -1,10 +1,15 @@
 import json
 
+from dao.student_dao import find
 from vo import Student
 
 
-def test_login(username, password):
-    st = Student()
-    st.email = 'ss'
-    st.introduction = 'aa'
-    return st.introduction
+
+
+def login(student_id, password):
+    student = find(id)
+
+    if student['password'] == password:
+        return student
+    else:
+        return None
