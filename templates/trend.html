@@ -4,11 +4,11 @@
 </head>
 
 <body>
+
 {% include 'navbar.html' %}
+
 <div class='container'>
-    <div class="card" style="width: 10rem;">
-        <img class="card-img-top" src="{{data['avatar']}}" alt="Card image cap">
-    </div>
+
     <form action='/student/update/' method='post'>
         <label for="user_id">UMoment id</label>
         <input type="text" readonly="true" value='{{data["user_id"]}}' id="user_id" name='user_id' class="form-control"
@@ -45,7 +45,12 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">update file</button>
     </form>
+
+
 </div>
+
+
 </body>
+
 
 </html>
