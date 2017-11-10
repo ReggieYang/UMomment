@@ -7,6 +7,9 @@ db = create_engine(DATABASEURI)
 db.echo = False  # No logging
 metadata = MetaData(db)
 
+student = Table('student', metadata, autoload=True)
+followership = Table('followership', metadata, autoload=True)
+
 
 def row2dict(row):
     d = {}
@@ -15,12 +18,31 @@ def row2dict(row):
     return d
 
 
-def create(student):
+def create_student(info):
+    statement = "INSERT INTO student ("
+    for key in info:
+        statement += key
+        statement += ','
+    statement = statement[0:-1]
+    statement += ') VALUES ('
+    for key in info:
+        if type(info[key]) == type('a'):
+            statement += "'"
+        statement += str(info[key])
+        if type(info[key]) == type('a'):
+            statement += "'"
+        statement += ','
+    statement = statement[0:-1]
+    statement += ')'
+    db.execute(statement)
+    # i = student.insert()
+    # i.execute(user_id=s['user_id'], nick_name=s['nick_name'], avatar=s['avatar'], school_id=s['school_id'],
+    #           since=s['since'], email=s['email'], password=s['password'],
+    #           introduction=s['introduction'])
     return
 
 
-def find(id):
-    student = Table('student', metadata, autoload=True)
+def find_student(id):
     result = student.select(student.c.user_id == id)
     resultExe = result.execute()
     rs = resultExe.fetchone()
@@ -30,13 +52,35 @@ def find(id):
     return s
 
 
-def update(student):
+# All the info about update
+def update_student(id, info):
+    statement = "UPDATE student SET "
+    for key in info:
+        statement += key
+        statement += '='
+        if type(info[key]) == type('a'):
+            statement += "'"
+        statement += str(info[key])
+        if type(info[key]) == type('a'):
+            statement += "'"
+        statement += ','
+    statement = statement[0:-1]
+    statement += ' WHERE user_id='
+    statement += str(id)
+    db.execute(statement)
     return
 
 
-def follow(student, follow):
+def follow(followerid, followedid, sincetime):
+    i = followership.insert()
+    i.execute(follower_id=followerid, followed_id=followedid, since=sincetime)
     return
 
 
-def unfollow(student, follow):
+def unfollow(followerid, followedid):
+    statement = "DELETE FROM followership WHERE follower_id="
+    statement += followerid
+    statement += " and followed_id="
+    statement += followedid
+    db.execute(statement)
     return
