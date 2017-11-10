@@ -6,6 +6,7 @@ from flask import Flask, request, render_template
 from flask_cors import CORS
 
 from logic.student_logic import login
+from dao.student_dao import find
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -14,6 +15,7 @@ CORS(application)
 
 @application.route('/')
 def home_page():
+    print(find(1))
     return render_template('login.html')
 
 
