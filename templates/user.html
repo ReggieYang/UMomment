@@ -7,40 +7,40 @@
 {% include 'navbar.html' %}
 <div class='container'>
     <div class="card" style="width: 10rem;">
-        <img class="card-img-top" src="{{data['avatar']}}" alt="Card image cap">
+        <img class="card-img-top" src="{{ session['user']['avatar'] }}" alt="Card image cap">
     </div>
     <form action='/student/update/' method='post'>
         <label for="user_id">UMoment id</label>
-        <input type="text" readonly="true" value='{{data["user_id"]}}' id="user_id" name='user_id' class="form-control"
+        <input type="text" readonly="true" value='{{session["user"]["user_id"]}}' id="user_id" name='user_id' class="form-control"
                required autofocus>
 
         <label for="nick_name">Nick Name</label>
-        <input type="text" value='{{data["nick_name"]}}' id="nick_name" name='nick_name' class="form-control"
+        <input type="text" value='{{session["user"]["nick_name"]}}' id="nick_name" name='nick_name' class="form-control"
                required>
 
         <label for="since">Join Since</label>
-        <input type="text" readonly="true" value='{{data["since"]}}' id="since" name='since' class="form-control"
+        <input type="text" readonly="true" value='{{session["user"]["since"]}}' id="since" name='since' class="form-control"
                required>
 
         <label for="email">Email</label>
-        <input type="email" value='{{data["email"]}}' id="email" name='email' class="form-control"
+        <input type="email" value='{{session["user"]["email"]}}' id="email" name='email' class="form-control"
                required>
 
         <label for="avatar">Avatar</label>
-        <input type="url" value='{{data["avatar"]}}' id="avatar" name='avatar' class="form-control"
+        <input type="url" value='{{session["user"]["avatar"]}}' id="avatar" name='avatar' class="form-control"
                required>
 
         <label for="school_id">School</label>
-        <input type="text" readonly="true" value='{{data["school_id"]}}' id="school_id" name='school_id'
+        <input type="text" readonly="true" value='{{session["user"]["school_id"]}}' id="school_id" name='school_id'
                class="form-control"
                required>
 
         <label for="password">Password</label>
-        <input type="password" value='{{data["password"]}}' id="password" name='password' class="form-control"
+        <input type="password" value='{{session["user"]["password"]}}' id="password" name='password' class="form-control"
                required>
 
         <label for="introduction">Introduction</label>
-        <input type="text" value='{{data["introduction"]}}' id="introduction" name='introduction' class="form-control"
+        <input type="text" value='{{session["user"]["introduction"]}}' id="introduction" name='introduction' class="form-control"
                required>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">update file</button>

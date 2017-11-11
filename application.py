@@ -1,16 +1,17 @@
 import json
 
-import flask
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
-from logic.student_logic import login, update_student, follow, unfollow
-from dao.student_dao import find
+from logic import login, update_student_l, follow, unfollow
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
 CORS(application)
+
+application.secret_key = 'super secret key'
+application.config['SESSION_TYPE'] = 'filesystem'
 
 
 def args2dict(request_args, args):
@@ -25,14 +26,23 @@ def home_page():
     return render_template('login.html')
 
 
+@application.route('/student/')
+def user_home_page():
+    if session['user'] is not None:
+        return render_template('user.html')
+
+    else:
+        return render_template('error.html')
+
+
 @application.route('/student/login/', methods=['POST'])
 def login_student():
     student_id = request.form['student_id']
     password = request.form['password']
     student = login(student_id, password)
     if student is not None:
-        context = dict(data=student)
-        return render_template('user.html', **context)
+        session['user'] = student
+        return redirect('/student/')
 
     else:
         return render_template('error.html')
@@ -43,15 +53,12 @@ def update_st():
     args = ['user_id', "nick_name", "avatar", "school_id", "since", "email", "password",
             "introduction"]
     student = args2dict(request, args)
-    update_student(student)
+    update_student_l(student)
     user_id = request.form['user_id']
     password = request.form['password']
     student = login(user_id, password)
-    if student is not None:
-        context = dict(data=student)
-        return render_template('user.html', **context)
-    else:
-        return render_template('error.html')
+    session['user'] = student
+    return redirect('/student/')
 
 
 @application.route('/student/follow/', methods=['POST'])
@@ -134,7 +141,7 @@ def comment_moment():
     return
 
 
-@application.route('/moment/', methods=['POST'])
+@application.route('/moment/', methods=['GET'])
 def get_all_moment():
     return render_template('moment.html')
 
@@ -154,4 +161,9 @@ def get_moment():
 
 
 if __name__ == '__main__':
+    # application.secret_key = 'super secret key'
+    # application.config['SESSION_TYPE'] = 'filesystem'
+
+    # application.debug = True
+
     application.run(host='127.0.0.1', port=6565, debug=True)
