@@ -4,7 +4,7 @@ import os
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
-from logic import login, update_student_l, follow, unfollow
+from logic import login, update_student_l, follow, unfollow, get_my_moment
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -143,6 +143,9 @@ def comment_moment():
 
 @application.route('/moment/', methods=['GET'])
 def get_all_moment():
+    user_id = session['user']['user_id']
+    moments = get_my_moment(user_id)
+    session['my_moments'] = moments
     return render_template('moment.html')
 
 

@@ -1,4 +1,7 @@
 import json
+
+import datetime
+
 from dao.student_dao import find_student, update_student
 
 
@@ -27,3 +30,12 @@ def follow(user_id, following_id):
 
 def unfollow(user_id, following_id):
     return
+
+
+def get_my_moment(user_id):
+    return [{"author_id": "1",
+             "content": "Philadelphia center Joel Embiid has agreed to a five-year, $148 million designated rookie scale max extension, league sources told ESPN.",
+             "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
+            {"author_id": "2", "content": "this outfit",
+             "image": "https://pbs.twimg.com/media/DOUFsExV4AE2WyL.jpg:large",
+             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]

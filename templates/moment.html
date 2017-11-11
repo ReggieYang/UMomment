@@ -2,21 +2,32 @@
 <html lang="en">
 <head>
     {% include 'header.html' %}
+    <style>
+        div.momment-card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
 {% include 'navbar.html' %}
 <div class="container">
-    <div class="card" style="width: 20rem;">
-        <img class="card-img-top" src="..." alt="Card image cap">
+    {% for d in session['my_moments']:%}
+    <div class="card momment-card">
+        <img class="card-img-top" src={{d['image']}} alt="Card image cap">
         <div class="card-block">
-            <h4 class="card-title">Card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <h4 class="card-title">{{d['author_id']}}</h4>
+            <p class="card-text">{{d['time']}}</p>
+            <p class="card-text">{{d['content']}}</p>
+            <a href="#" class="btn btn-primary">like</a>
+            <input type="text" id="comment" name='comment' class="form-control" required autofocus>
+            <a href="#" class="btn btn-primary">comment</a>
         </div>
     </div>
+    {% endfor %}
 </div>
+
 
 </body>
 </html>
