@@ -20,7 +20,14 @@
             <h4 class="card-title">{{d['author_id']}}</h4>
             <p class="card-text">{{d['time']}}</p>
             <p class="card-text">{{d['content']}}</p>
-            <a href="#" class="btn btn-primary">like</a>
+            <a href="#" class="btn btn-primary like-button" id="moment-{{d['moment_id']}}">
+                {% if d['like'] == 1: %}
+                like
+                {% else: %}
+                unlike
+                {% endif %}
+            </a>
+            <label id="like-count-{{d['moment_id']}}">{{ d['like_count'] }}</label>
             <input type="text" id="comment" name='comment' class="form-control" required autofocus>
             <a href="#" class="btn btn-primary">comment</a>
         </div>
@@ -30,4 +37,27 @@
 
 
 </body>
+
+<script type="text/javascript">
+    $(".like-button").click(function () {
+        var moment_id = $(this).attr('id').split("-")[1];
+        var jsonData = {"moment_id": moment_id, "like": $(this).text()};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/like/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#like-count-" + moment_id).text(res);
+                if ($(this).text() == 'like') {
+                    $(this).text('unlike');
+                }
+                else {
+                    $(this).text('like');
+                }
+            }
+        });
+    });
+</script>
+
 </html>

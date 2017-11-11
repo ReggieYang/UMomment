@@ -4,7 +4,7 @@ import os
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
-from logic import login, update_student_l, follow, unfollow, get_my_moment
+from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -133,7 +133,12 @@ def post_moment():
 
 @application.route('/moment/like/', methods=['POST'])
 def like_moment():
-    return
+    moment_id = request.form['moment_id']
+    user_id = session['user']['user_id']
+    if request.form['like'] == 'like':
+        return str(like_moment_l(moment_id, user_id))
+    else:
+        return str(unlike_moment_l(moment_id, user_id))
 
 
 @application.route('/moment/comment/', methods=['POST'])
