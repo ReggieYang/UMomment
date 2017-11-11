@@ -10,6 +10,14 @@ metadata = MetaData(db)
 student = Table('student', metadata, autoload=True)
 followership = Table('followership', metadata, autoload=True)
 
+def quotevalue(value):
+    statement = ''
+    if type(value) == type('a'):
+        statement += "'"
+    statement += str(value)
+    if type(value) == type('a'):
+        statement += "'"
+    return statement
 
 def row2dict(row):
     d = {}
@@ -26,11 +34,7 @@ def create_student(info):
     statement = statement[0:-1]
     statement += ') VALUES ('
     for key in info:
-        if type(info[key]) == type('a'):
-            statement += "'"
-        statement += str(info[key])
-        if type(info[key]) == type('a'):
-            statement += "'"
+        quotevalue(info[key])
         statement += ','
     statement = statement[0:-1]
     statement += ')'
@@ -58,11 +62,7 @@ def update_student(id, info):
     for key in info:
         statement += key
         statement += '='
-        if type(info[key]) == type('a'):
-            statement += "'"
-        statement += str(info[key])
-        if type(info[key]) == type('a'):
-            statement += "'"
+        quotevalue(info[key])
         statement += ','
     statement = statement[0:-1]
     statement += ' WHERE user_id='
