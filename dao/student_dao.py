@@ -34,7 +34,7 @@ def create_student(info):
     statement = statement[0:-1]
     statement += ') VALUES ('
     for key in info:
-        quotevalue(info[key])
+        statement += quotevalue(info[key])
         statement += ','
     statement = statement[0:-1]
     statement += ')'
@@ -62,7 +62,7 @@ def update_student(id, info):
     for key in info:
         statement += key
         statement += '='
-        quotevalue(info[key])
+        statement += quotevalue(info[key])
         statement += ','
     statement = statement[0:-1]
     statement += ' WHERE user_id='
