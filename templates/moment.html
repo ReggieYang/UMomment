@@ -13,35 +13,79 @@
 <body>
 {% include 'navbar.html' %}
 <div class="container">
-    {% for d in session['my_moments']:%}
+    {% for d in moments:%}
     <div class="card momment-card">
         <img class="card-img-top" src={{d['image']}} alt="Card image cap">
         <div class="card-block">
-            <h4 class="card-title">{{d['author_id']}}</h4>
-            <p class="card-text">{{d['time']}}</p>
+            <div class="row">
+                <div class="col-6">
+                    <p class="card-text">{{d['author_id']}}</p></div>
+                <div class="col-6">
+                    <p class="card-text">{{d['time']}}</p>
+                </div>
+            </div>
             <p class="card-text">{{d['content']}}</p>
-            <a href="#" class="btn btn-primary like-button" id="moment-{{d['moment_id']}}">
-                {% if d['like'] == 1: %}
-                like
-                {% else: %}
-                unlike
-                {% endif %}
-            </a>
-            <label id="like-count-{{d['moment_id']}}">{{ d['like_count'] }}</label>
-            <input type="text" id="comment" name='comment' class="form-control" required autofocus>
-            <a href="#" class="btn btn-primary">comment</a>
+            <div class="row">
+                <div class="col-3">
+                    <label class="btn btn-primary like-button" id="moment-{{d['moment_id']}}">
+                        {% if d['like'] == 1: %}
+                        like
+                        {% else: %}
+                        unlike
+                        {% endif %}
+                    </label>
+                    <label id="like-count-{{d['moment_id']}}">{{ d['like_count'] }}</label>
+                </div>
+                <div class="col-4">
+                    <input type="text" id="comment-content-{{d['moment_id']}}" class="form-control"
+                           required autofocus>
+                </div>
+                <div class="col-2">
+                    <label class="btn btn-primary comment-button" id="comment-{{d['moment_id']}}">comment</label>
+                </div>
+                <div class="col-3">
+                    <label class="btn btn-primary comments" id="comments-{{d['moment_id']}}">see comments</label>
+                </div>
+            </div>
         </div>
     </div>
     {% endfor %}
 </div>
-
-
 </body>
+
+<div class="modal fade" id="comments-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Comments</h4>
+            </div>
+            <div class="modal-body">
+                {% for c in session['comments']: %}
+                <div class="card momment-card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="card-text">{{c['author_name']}}</p></div>
+                            <div class="col-4">
+                                <p class="card-text">@{{c['to_user']}}</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="card-text">{{c['time']}}</p>
+                            </div>
+                        </div>
+                        <p class="card-text">{{c['content']}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $(".like-button").click(function () {
-        var moment_id = $(this).attr('id').split("-")[1];
-        var jsonData = {"moment_id": moment_id, "like": $(this).text()};
+        let moment_id = $(this).attr('id').split("-")[1];
+        let jsonData = {"moment_id": moment_id, "like": $(this).text()};
         $.ajax({
             type: 'POST',
             url: "/moment/like/",
@@ -49,12 +93,42 @@
             data: jsonData,
             success: (res) => {
                 $("#like-count-" + moment_id).text(res);
-                if ($(this).text() == 'like') {
+                if ($(this).text() === 'like') {
                     $(this).text('unlike');
                 }
                 else {
                     $(this).text('like');
                 }
+            }
+        });
+    });
+
+    $(".comment-button").click(function () {
+        let moment_id = $(this).attr('id').split("-")[1];
+        let comment_content = $("#comment-content-" + moment_id).val();
+        let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": 123};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/comment/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("comment_content" + moment_id).text('')
+            }
+        });
+    });
+
+    $(".comments").click(function () {
+        let moment_id = $(this).attr('id').split("-")[1];
+        console.log(moment_id);
+        let jsonData = {"moment_id": moment_id};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/findComment/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#comments-modal").modal();
             }
         });
     });

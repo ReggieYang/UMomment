@@ -49,3 +49,17 @@ def like_moment_l(moment_id, user_id):
 def unlike_moment_l(moment_id, user_id):
     # print(str(user_id) + 'unlike' + str(moment_id))
     return 25
+
+
+def comment_moment_l(comment):
+    print(str(comment))
+    return
+
+
+def get_comment_momment_l(moment_id):
+    return [{"author_name": "ReggieYang", "to_user": "Xfl", "content": "Hello", "author_id": 3,
+             "time": datetime.datetime.now().strftime("%Y-%m-%d")},
+            {"author_name": "Naruhodou", "to_user": "Mitsurugi", "content": "Hi", "author_id": 123,
+             "time": datetime.datetime.now().strftime("%Y-%m-%d")},
+            {"author_name": "Naruto", "to_user": "Sasuke", "content": "Haha", "author_id": 769,
+             "time": "2017-06-05"}]

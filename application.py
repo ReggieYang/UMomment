@@ -1,10 +1,13 @@
 import json
 
 import os
+
+import datetime
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
-from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l
+from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
+    comment_moment_l, get_comment_momment_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -143,15 +146,27 @@ def like_moment():
 
 @application.route('/moment/comment/', methods=['POST'])
 def comment_moment():
-    return
+    args = ["content", "moment_id", "to_user"]
+    comment = args2dict(request, args)
+    comment['author_id'] = session['user']['user_id']
+    comment['time'] = datetime.datetime.now()
+    comment_moment_l(comment)
+    return 'success'
 
 
 @application.route('/moment/', methods=['GET'])
 def get_all_moment():
     user_id = session['user']['user_id']
     moments = get_my_moment(user_id)
-    session['my_moments'] = moments
-    return render_template('moment.html')
+    context = dict(moments=moments)
+    return render_template('moment.html', **context)
+
+
+@application.route('/moment/findComment/', methods=['POST'])
+def get_moment_comment():
+    comments = get_comment_momment_l(request.form['moment_id'])
+    session['comments'] = comments
+    return 'success'
 
 
 @application.route('/moment/find/', methods=['POST'])
