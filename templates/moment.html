@@ -19,7 +19,7 @@
         <div class="card-block">
             <div class="row">
                 <div class="col-6">
-                    <p class="card-text">{{d['author_id']}}</p></div>
+                    <p class="card-text">{{d['author_name']}}</p></div>
                 <div class="col-6">
                     <p class="card-text">{{d['time']}}</p>
                 </div>
@@ -104,7 +104,7 @@
     });
 
     $(".comment-button").click(function () {
-        let moment_id = $(this).attr('id').split("-")[1];
+        var moment_id = $(this).attr('id').split("-")[1];
         let comment_content = $("#comment-content-" + moment_id).val();
         let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": 123};
         $.ajax({
@@ -113,7 +113,9 @@
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                $("comment_content" + moment_id).text('')
+                console.log("#comment_content" + moment_id);
+                console.log($("#comment_content" + moment_id).val());
+//                $("#comment_content" + moment_id).val("")
             }
         });
     });
