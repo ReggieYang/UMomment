@@ -7,7 +7,7 @@ from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
-    comment_moment_l, get_comment_momment_l
+    comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -99,9 +99,12 @@ def leave_group():
     return
 
 
-@application.route('/trend/delete/', methods=['POST'])
-def delete_trend():
-    return
+@application.route('/trend/', methods=['GET'])
+def my_trend():
+    user_id = session['user']['user_id']
+    trends = get_my_trend_l(user_id)
+    context = dict(trends=trends)
+    return render_template('trend.html', **context)
 
 
 @application.route('/trend/create/', methods=['POST'])
@@ -119,9 +122,12 @@ def comment_trend():
     return
 
 
-@application.route('/trend/find/', methods=['POST'])
+@application.route('/trendDetail/', methods=['GET'])
 def get_trend():
-    return
+    trend_id = request.args.get('trend_id')
+    trend = get_trend_l(trend_id)
+    context = dict(trend=trend)
+    return render_template('trend_detail.html', **context)
 
 
 @application.route('/moment/delete/', methods=['POST'])

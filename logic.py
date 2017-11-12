@@ -64,3 +64,42 @@ def get_comment_momment_l(moment_id):
              "time": datetime.datetime.now().strftime("%Y-%m-%d")},
             {"author_name": "Naruto", "to_user": "Sasuke", "content": "Haha", "author_id": 769,
              "time": "2017-06-05"}]
+
+
+def get_my_trend_l(user_id):
+    content1 = "Philadelphia center Joel Embiid has agreed to a five-year, $148 million " \
+               "designated rookie scale max extension, league sources told ESPN."
+    content2 = "The Golden State Warriors are making life difficult for more than just " \
+               "their NBA contemporaries."
+    # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
+    return [{"author_id": "1", "like": 0, "trend_id": 123, "like_count": 123, "author_name": "Reggie",
+             "content": content1[0:50], "circle_id": 12, "circle_name": "NBA",
+             "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
+            {"author_id": "2", "content": content2[0:50], "like": 1, "trend_id": 12, "like_count": 3,
+             "image": "https://pbs.twimg.com/media/DOUFsExV4AE2WyL.jpg:large", "author_name": "Xfl",
+             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+             "circle_id": 122, "circle_name": "columbia buy sell memes"}]
+
+
+def get_trend_l(trend_id):
+    content1 = "The Golden State Warriors are making life difficult for more than " \
+               "just their NBA contemporaries.\n\nHoops prognosticators of the bold " \
+               "variety, for instance, are having a tricky time dreaming bigger than " \
+               "the Dubs' reality.\n\nThey're dominating at once-in-a-generation levels." \
+               " They're evolving the sport and challenging long-held beliefs about what's " \
+               "possible inside the lines. They might have compiled the best roster ever" \
+               " assembled, and each iteration in this run always seems better than the " \
+               "last.\n\nThat's why predicting another title for this franchise isn't bold " \
+               "enough. While it's not guaranteed, it's the most likely ending to the upcoming " \
+               "campaign.\n\nWe're going a little more daring as we delve into five bold " \
+               "Warriors' forecasts for 2017-18.\n"
+    return {"trend": {"author_id": "1", "like": 0, "trend_id": 123, "like_count": 123, "author_name": "Reggie",
+                      "content": content1, "circle_id": 12, "circle_name": "NBA",
+                      "image": "https://pbs.twimg.com/media/DOZxjmvV4AEVBge.jpg:large",
+                      "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
+            "comments": [{"author_name": "ReggieYang", "content": "Hello", "author_id": 3,
+                          "time": datetime.datetime.now().strftime("%Y-%m-%d")},
+                         {"author_name": "Naruhodou", "content": "Hi", "author_id": 123,
+                          "time": datetime.datetime.now().strftime("%Y-%m-%d")},
+                         {"author_name": "Naruto", "content": "Haha", "author_id": 769,
+                          "time": "2017-06-05"}]}

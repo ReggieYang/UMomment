@@ -1,6 +1,5 @@
 <html>
 <head>
-    {% include 'header.html' %}
 </head>
 
 <body>
@@ -11,7 +10,8 @@
     </div>
     <form action='/student/update/' method='post'>
         <label for="user_id">UMoment id</label>
-        <input type="text" readonly="true" value='{{session["user"]["user_id"]}}' id="user_id" name='user_id' class="form-control"
+        <input type="text" readonly="true" value='{{session["user"]["user_id"]}}' id="user_id" name='user_id'
+               class="form-control"
                required autofocus>
 
         <label for="nick_name">Nick Name</label>
@@ -19,7 +19,8 @@
                required>
 
         <label for="since">Join Since</label>
-        <input type="text" readonly="true" value='{{session["user"]["since"]}}' id="since" name='since' class="form-control"
+        <input type="text" readonly="true" value='{{session["user"]["since"]}}' id="since" name='since'
+               class="form-control"
                required>
 
         <label for="email">Email</label>
@@ -36,16 +37,19 @@
                required>
 
         <label for="password">Password</label>
-        <input type="password" value='{{session["user"]["password"]}}' id="password" name='password' class="form-control"
+        <input type="password" value='{{session["user"]["password"]}}' id="password" name='password'
+               class="form-control"
                required>
 
         <label for="introduction">Introduction</label>
-        <input type="text" value='{{session["user"]["introduction"]}}' id="introduction" name='introduction' class="form-control"
+        <input type="text" value='{{session["user"]["introduction"]}}' id="introduction" name='introduction'
+               class="form-control"
                required>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">update file</button>
     </form>
 </div>
 </body>
+{% include 'header.html' %}
 
 </html>

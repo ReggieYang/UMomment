@@ -113,9 +113,7 @@
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                console.log("#comment_content" + moment_id);
-                console.log($("#comment_content" + moment_id).val());
-//                $("#comment_content" + moment_id).val("")
+                $("#comment-content-" + moment_id).val("")
             }
         });
     });

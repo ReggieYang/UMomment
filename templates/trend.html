@@ -1,56 +1,125 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     {% include 'header.html' %}
+    <style>
+        div.momment-card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
-
 {% include 'navbar.html' %}
-
-<div class='container'>
-
-    <form action='/student/update/' method='post'>
-        <label for="user_id">UMoment id</label>
-        <input type="text" readonly="true" value='{{data["user_id"]}}' id="user_id" name='user_id' class="form-control"
-               required autofocus>
-
-        <label for="nick_name">Nick Name</label>
-        <input type="text" value='{{data["nick_name"]}}' id="nick_name" name='nick_name' class="form-control"
-               required>
-
-        <label for="since">Join Since</label>
-        <input type="text" readonly="true" value='{{data["since"]}}' id="since" name='since' class="form-control"
-               required>
-
-        <label for="email">Email</label>
-        <input type="email" value='{{data["email"]}}' id="email" name='email' class="form-control"
-               required>
-
-        <label for="avatar">Avatar</label>
-        <input type="url" value='{{data["avatar"]}}' id="avatar" name='avatar' class="form-control"
-               required>
-
-        <label for="school_id">School</label>
-        <input type="text" readonly="true" value='{{data["school_id"]}}' id="school_id" name='school_id'
-               class="form-control"
-               required>
-
-        <label for="password">Password</label>
-        <input type="password" value='{{data["password"]}}' id="password" name='password' class="form-control"
-               required>
-
-        <label for="introduction">Introduction</label>
-        <input type="text" value='{{data["introduction"]}}' id="introduction" name='introduction' class="form-control"
-               required>
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">update file</button>
-    </form>
-
-
+<div class="container">
+    {% for d in trends:%}
+    <div class="card momment-card">
+        <div class="card-block">
+            <div class="row">
+                <div class="col-6">
+                    <h4 class="card-text">{{d['circle_name']}}</h4></div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <p class="card-text">{{d['author_name']}}</p></div>
+                <div class="col-6">
+                    <p class="card-text">{{d['time']}}</p>
+                </div>
+            </div>
+            <p class="card-text">{{d['content']}}...</p>
+            <div class="row">
+                <div class="col-3">
+                    <a class="btn btn-primary comments" href="/trendDetail/?trend_id={{d['trend_id']}}">see details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
-
-
 </body>
 
+<div class="modal fade" id="comments-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Comments</h4>
+            </div>
+            <div class="modal-body">
+                {% for c in session['comments']: %}
+                <div class="card momment-card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="card-text">{{c['author_name']}}</p></div>
+                            <div class="col-4">
+                                <p class="card-text">@{{c['to_user']}}</p>
+                            </div>
+                            <div class="col-4">
+                                <p class="card-text">{{c['time']}}</p>
+                            </div>
+                        </div>
+                        <p class="card-text">{{c['content']}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".like-button").click(function () {
+        let moment_id = $(this).attr('id').split("-")[1];
+        let jsonData = {"moment_id": moment_id, "like": $(this).text()};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/like/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#like-count-" + moment_id).text(res);
+                if ($(this).text() === 'like') {
+                    $(this).text('unlike');
+                }
+                else {
+                    $(this).text('like');
+                }
+            }
+        });
+    });
+
+    $(".comment-button").click(function () {
+        var moment_id = $(this).attr('id').split("-")[1];
+        let comment_content = $("#comment-content-" + moment_id).val();
+        let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": 123};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/comment/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                console.log("#comment_content" + moment_id);
+                console.log($("#comment_content" + moment_id).val());
+//                $("#comment_content" + moment_id).val("")
+            }
+        });
+    });
+
+    $(".comments").click(function () {
+        let moment_id = $(this).attr('id').split("-")[1];
+        console.log(moment_id);
+        let jsonData = {"moment_id": moment_id};
+        $.ajax({
+            type: 'POST',
+            url: "/moment/findComment/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#comments-modal").modal();
+            }
+        });
+    });
+</script>
 
 </html>
