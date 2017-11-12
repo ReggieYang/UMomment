@@ -36,7 +36,21 @@
 
         <aside class="col-sm-3 ml-sm-auto blog-sidebar">
             <div class="sidebar-module sidebar-module-inset">
-                <h4>{{trend['trend']['like_count']}} Likes</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <h4 id='like-count'>{{trend['trend']['like_count']}} Likes</h4>
+                    </div>
+                    <div class="col-6">
+                        <label class="btn btn-primary like-button comments w-50 p-1"
+                               id="like-{{trend['trend']['trend_id']}}">
+                            {% if trend['trend']['like'] == 1: %}
+                            like
+                            {% else: %}
+                            unlike
+                            {% endif %}
+                        </label>
+                    </div>
+                </div>
                 <h4>Comments</h4>
                 {% for c in trend['comments']: %}
                 <div class="card momment-card">
@@ -52,10 +66,65 @@
                     </div>
                 </div>
                 {% endfor %}
+                <div class="card momment-card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class='col-12'>
+                                <textarea class="form-control" rows="3"
+                                          id="comment-content-{{trend['trend']['trend_id']}}" required></textarea>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class="col-3">
+                                <label class="btn btn-primary comment-button"
+                                       id="comment-{{trend['trend']['trend_id']}}">comment</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </aside><!-- /.blog-sidebar -->
     </div><!-- /.row -->
 </main><!-- /.container -->
 
 </body>
+
+
+<script type="text/javascript">
+    $(".like-button").click(function () {
+        let trend_id = $(this).attr('id').split("-")[1];
+        let jsonData = {"trend_id": trend_id, "like": $(this).text()};
+        $.ajax({
+            type: 'POST',
+            url: "/trend/like/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#like-count").text(res + " Likes");
+                if ($(this).text() === 'like') {
+                    $(this).text('unlike');
+                }
+                else {
+                    $(this).text('like');
+                }
+            }
+        });
+    });
+
+    $(".comment-button").click(function () {
+        var trend_id = $(this).attr('id').split("-")[1];
+        let comment_content = $("#comment-content-" + trend_id).val();
+        let jsonData = {"trend_id": trend_id, "content": comment_content};
+        $.ajax({
+            type: 'POST',
+            url: "/trend/comment/",
+            dataType: "text",
+            data: jsonData,
+            success: (res) => {
+                $("#comment-content-" + trend_id).val("")
+            }
+        });
+    });
+</script>
+
 </html>

@@ -120,7 +120,6 @@
 
     $(".comments").click(function () {
         let moment_id = $(this).attr('id').split("-")[1];
-        console.log(moment_id);
         let jsonData = {"moment_id": moment_id};
         $.ajax({
             type: 'POST',

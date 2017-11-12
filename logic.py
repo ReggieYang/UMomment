@@ -103,3 +103,35 @@ def get_trend_l(trend_id):
                           "time": datetime.datetime.now().strftime("%Y-%m-%d")},
                          {"author_name": "Naruto", "content": "Haha", "author_id": 769,
                           "time": "2017-06-05"}]}
+
+
+def like_trend_l(moment_id, user_id):
+    # print(str(user_id) + 'like' + str(moment_id))
+    return 62
+
+
+def unlike_trend_l(moment_id, user_id):
+    # print(str(user_id) + 'unlike' + str(moment_id))
+    return 37
+
+
+def comment_trend_l(comment):
+    print(str(comment))
+    return
+
+
+def get_all_circle_l(school_id):
+    return [{"circle_id": 12, "circle_name": "Camping is our life",
+             "icon": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-0/c68.0.160.160/"
+                     "p160x160/15349565_10208953025636274_6871502128788396568_n.jpg?o"
+                     "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
+             "introduction": "This group is like wolf of wall street. there’s buying "
+                             "and selling, cutthroat competition and drugs. it’s a stock exchange",
+             "announcement": "Buy and cell"},
+            {"circle_id": 23, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
+             "announcement": ""}]
+
+
+def join_circle_l(circle_id, user_id):
+    print(str(user_id) + "join circle" + str(circle_id))
+    return

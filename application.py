@@ -7,7 +7,8 @@ from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
-    comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l
+    comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
+    get_all_circle_l, join_circle_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -89,9 +90,20 @@ def create_group():
     return
 
 
-@application.route('/group/join/', methods=['POST'])
-def join_group():
-    return
+@application.route('/circle/', methods=['GET'])
+def get_circle_school():
+    school_id = session['user']['school_id']
+    circles = get_all_circle_l(school_id)
+    context = dict(circles=circles)
+    return render_template('circle.html', **context)
+
+
+@application.route('/circle/join/', methods=['POST'])
+def join_circle():
+    circle_id = request.args.get('circle_id')
+    user_id = session['user']['user_id']
+    join_circle_l(circle_id, user_id)
+    return 'success'
 
 
 @application.route('/group/leave/', methods=['POST'])
@@ -114,12 +126,22 @@ def post_trend():
 
 @application.route('/trend/like/', methods=['POST'])
 def like_trend():
-    return
+    trend_id = request.form['trend_id']
+    user_id = session['user']['user_id']
+    if request.form['like'] == 'like':
+        return str(like_trend_l(trend_id, user_id))
+    else:
+        return str(unlike_trend_l(trend_id, user_id))
 
 
 @application.route('/trend/comment/', methods=['POST'])
 def comment_trend():
-    return
+    args = ["content", "trend_id"]
+    comment = args2dict(request, args)
+    comment['author_id'] = session['user']['user_id']
+    comment['time'] = datetime.datetime.now()
+    comment_trend_l(comment)
+    return 'success'
 
 
 @application.route('/trendDetail/', methods=['GET'])
