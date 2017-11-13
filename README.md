@@ -49,3 +49,9 @@ like trend(user_id, trend_id)
 unlike trend(user_id, trend_id)
 
 comment trend(user_id, trend_id)
+
+
+## TODO for Reggie
+Post Trend(allow user to select group)
+Create Group(manager, school)
+Follow User(TODO)

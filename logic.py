@@ -29,8 +29,6 @@ def get_student_l(user_id):
 def create_student_l(student):
     print(str(student))
     student['user_id'] = 17
-    student['password'] = "bbrownlau"
-    student['since'] = datetime.datetime.now()
     return student
 
 
@@ -70,6 +68,11 @@ def unlike_moment_l(moment_id, user_id):
 
 def comment_moment_l(comment):
     print(str(comment))
+    return
+
+
+def create_moment_l(moment):
+    print(str(moment))
     return
 
 

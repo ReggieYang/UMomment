@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
     comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
-    get_all_circle_l, join_circle_l, get_schools_l, create_student_l
+    get_all_circle_l, join_circle_l, get_schools_l, create_student_l, create_moment_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -37,12 +37,12 @@ def register_page():
 
 @application.route('/student/create/', methods=['POST'])
 def create_student():
-    args = ["nick_name", "avatar",  "email", "password",
+    args = ["nick_name", "avatar", "email", "password",
             "introduction", "school_id"]
     student = args2dict(request, args)
     new_student = create_student_l(student)
     session['user'] = new_student
-    return 'success'
+    return redirect('/student/')
 
 
 @application.route('/student/')
@@ -174,7 +174,12 @@ def delete_moment():
 
 @application.route('/moment/create/', methods=['POST'])
 def post_moment():
-    return
+    args = ["content", "image"]
+    moment = args2dict(request, args)
+    moment['author_id'] = session['user']['user_id']
+    moment['time'] = datetime.datetime.now()
+    create_moment_l(moment)
+    return redirect('/moment/')
 
 
 @application.route('/moment/like/', methods=['POST'])
