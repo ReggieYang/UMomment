@@ -10,7 +10,8 @@ metadata = MetaData(db)
 student = Table('student', metadata, autoload=True)
 followership = Table('followership', metadata, autoload=True)
 membership = Table('membership', metadata, autoload=True)
-moment = able('moment', metadata, autoload=True)
+circle = Table('circle', metadata, autoload=True)
+moment = Table('moment', metadata, autoload=True)
 
 
 def quotevalue(value):
@@ -122,17 +123,17 @@ def find_all_schools():
     return d
 
 
-# def post_moment(info):
-#     statement = "INSERT INTO moment ("
-#     for key in info:
-#         statement += key
-#         statement += ','
-#     statement = statement[0:-1]
-#     statement += ') VALUES ('
-#     for key in info:
-#         statement += quotevalue(info[key])
-#         statement += ','
-#     statement = statement[0:-1]
-#     statement += ')'
-#     db.execute(statement)
-#     return
+def post_moment(info):
+    statement = "INSERT INTO moment ("
+    for key in info:
+        statement += key
+        statement += ','
+    statement = statement[0:-1]
+    statement += ') VALUES ('
+    for key in info:
+        statement += quotevalue(info[key])
+        statement += ','
+    statement = statement[0:-1]
+    statement += ')'
+    db.execute(statement)
+    return
