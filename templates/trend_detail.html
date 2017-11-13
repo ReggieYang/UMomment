@@ -45,7 +45,7 @@
                     <div class="col-6">
                         <label class="btn btn-primary like-button comments w-50 p-1"
                                id="like-{{trend['trend']['trend_id']}}">
-                            {% if trend['trend']['like'] == 1: %}
+                            {% if trend['trend']['like'] == 0: %}
                             like
                             {% else: %}
                             unlike
@@ -103,13 +103,18 @@
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                $("#like-count").text(res + " Likes");
-                if ($(this).text() === 'like') {
+                let lc = $("#like-count");
+                let cnt = parseInt(lc.text().trim().split(" ")[0]);
+                if ($(this).text().trim() === 'like') {
                     $(this).text('unlike');
+                    cnt++;
+
                 }
                 else {
                     $(this).text('like');
+                    cnt--;
                 }
+                lc.text(cnt + " Likes");
             }
         });
     });

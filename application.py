@@ -105,11 +105,10 @@ def discover_page():
 
 
 @application.route('/circle/create/', methods=['POST'])
-def create_circle():
+def create_new_circle():
     args = ["introduction", "circle_name", "announcement", 'icon']
     circle = args2dict(request, args)
     circle['admin_id'] = session['user']['user_id']
-    circle['time'] = datetime.datetime.now()
     circle['school_id'] = session['user']['school_id']
     create_circle_l(circle)
     return redirect('/circle/')
@@ -124,8 +123,8 @@ def get_circle_school():
 
 
 @application.route('/circle/join/', methods=['POST'])
-def join_circle():
-    circle_id = request.args.get('circle_id')
+def join_new_circle():
+    circle_id = request.form['circle_id']
     user_id = session['user']['user_id']
     join_circle_l(circle_id, user_id)
     return 'success'
@@ -141,11 +140,10 @@ def my_trend():
 
 
 @application.route('/trend/create/', methods=['POST'])
-def post_trend():
+def post_new_trend():
     args = ["content", "circle_id", "image"]
     trend = args2dict(request, args)
     trend['author_id'] = session['user']['user_id']
-    trend['time'] = datetime.datetime.now()
     create_trend_l(trend)
     return redirect('/trend/')
 
@@ -155,17 +153,17 @@ def like_trend():
     trend_id = request.form['trend_id']
     user_id = session['user']['user_id']
     if request.form['like'] == 'like':
-        return str(like_trend_l(trend_id, user_id))
+        like_trend_l(trend_id, user_id)
     else:
-        return str(unlike_trend_l(trend_id, user_id))
+        unlike_trend_l(trend_id, user_id)
+    return 'success'
 
 
 @application.route('/trend/comment/', methods=['POST'])
-def comment_trend():
+def comment_on_trend():
     args = ["content", "trend_id"]
     comment = args2dict(request, args)
     comment['author_id'] = session['user']['user_id']
-    comment['time'] = datetime.datetime.now()
     comment_trend_l(comment)
     return 'success'
 
@@ -199,11 +197,10 @@ def like_mom():
 
 
 @application.route('/moment/comment/', methods=['POST'])
-def comment_moment():
+def comment_on_moment():
     args = ["content", "moment_id", "to_user"]
     comment = args2dict(request, args)
     comment['author_id'] = session['user']['user_id']
-    comment['time'] = datetime.datetime.now()
     comment_moment_l(comment)
     return 'success'
 

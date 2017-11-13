@@ -73,7 +73,7 @@
 <script>
     $(".join").click(function () {
         var circle_id = $(this).attr('id').split("-")[1];
-        let jsonData = {"circle": circle_id};
+        let jsonData = {"circle_id": circle_id};
         $.ajax({
             type: 'POST',
             url: "/circle/join/",

@@ -3,7 +3,8 @@ import json
 import datetime
 
 from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
-    find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment
+    find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment, \
+    comment_trend, comment_moment, post_trend, like_trend, unlike_trend, post_circle, join_circle, find_circles_join
 
 
 def login(student_id, password):
@@ -58,7 +59,7 @@ def my_follower(user_id):
 
 def get_my_moment(user_id):
     # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
-    return [{"author_id": "1", "like": 1, "moment_id": 2, "like_count": 123, "author_name": "Reggie",
+    return [{"author_id": "1", "like": 0, "moment_id": 2, "like_count": 123, "author_name": "Reggie",
              "content": "Philadelphia center Joel Embiid has agreed to a five-year, $148 million designated rookie"
                         " scale max extension, league sources told ESPN.",
              "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
@@ -78,7 +79,8 @@ def unlike_moment_l(moment_id, user_id):
 
 
 def comment_moment_l(comment):
-    print(str(comment))
+    comment['time'] = str(datetime.datetime.now())
+    comment_moment(comment)
     return
 
 
@@ -124,7 +126,7 @@ def get_trend_l(trend_id):
                "enough. While it's not guaranteed, it's the most likely ending to the upcoming " \
                "campaign.\n\nWe're going a little more daring as we delve into five bold " \
                "Warriors' forecasts for 2017-18.\n"
-    return {"trend": {"author_id": "1", "like": 0, "trend_id": 123, "like_count": 123, "author_name": "Reggie",
+    return {"trend": {"author_id": "1", "like": 0, "trend_id": 1, "like_count": 123, "author_name": "Reggie",
                       "content": content1, "circle_id": 12, "circle_name": "NBA",
                       "image": "https://pbs.twimg.com/media/DOZxjmvV4AEVBge.jpg:large",
                       "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
@@ -136,48 +138,49 @@ def get_trend_l(trend_id):
                           "time": "2017-06-05"}]}
 
 
-def like_trend_l(moment_id, user_id):
-    # print(str(user_id) + 'like' + str(moment_id))
-    return 62
+def like_trend_l(trend_id, user_id):
+    like_trend({"trend_id": trend_id, "user_id": user_id, "time": str(datetime.datetime.now())})
+    return
 
 
-def unlike_trend_l(moment_id, user_id):
-    # print(str(user_id) + 'unlike' + str(moment_id))
-    return 37
+def unlike_trend_l(trend_id, user_id):
+    unlike_trend(user_id, trend_id)
+    return
 
 
 def create_trend_l(trend):
-    print(str(trend))
+    trend['time'] = str(datetime.datetime.now())
+    post_trend(trend)
     return
 
 
 def comment_trend_l(comment):
-    print(str(comment))
+    comment['time'] = str(datetime.datetime.now())
+    comment_trend(comment)
     return
 
 
 def get_my_circle(user_id):
-    return [{"circle_id": 1, "circle_name": "Terrilove"}, {"circle_id": 12, "circle_name": "Timofev"},
-            {"circle_id": 76, "circle_name": "Wilkins"}]
+    return find_circles_join(user_id)
 
 
 def create_circle_l(circle):
-    print(str(circle))
+    post_circle(circle)
     return
 
 
 def get_all_circle_l(school_id):
-    return [{"circle_id": 12, "circle_name": "Camping is our life",
+    return [{"circle_id": 4, "circle_name": "Camping is our life",
              "icon": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-0/c68.0.160.160/"
                      "p160x160/15349565_10208953025636274_6871502128788396568_n.jpg?o"
                      "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
              "introduction": "This group is like wolf of wall street. there’s buying "
                              "and selling, cutthroat competition and drugs. it’s a stock exchange",
              "announcement": "Buy and cell", "admin_id": 12, "admin_name": "Harden"},
-            {"circle_id": 23, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
+            {"circle_id": 5, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
              "announcement": "", "admin_id": 1, "admin_name": "Rudy"}]
 
 
 def join_circle_l(circle_id, user_id):
-    print(str(user_id) + "join circle" + str(circle_id))
+    join_circle(user_id, circle_id, str(datetime.datetime.now()))
     return
