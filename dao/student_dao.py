@@ -134,6 +134,23 @@ def find_my_followers(userid):
     return d
 
 
+# info = {'circle_id':10, 'circle_name':'yes', 'introduction':'Test for post circle', 'school_id':5, 'admin_id':4}
+def post_circle(info):
+    statement = "INSERT INTO circle ("
+    for key in info:
+        statement += key
+        statement += ','
+    statement = statement[0:-1]
+    statement += ') VALUES ('
+    for key in info:
+        statement += quotevalue(info[key])
+        statement += ','
+    statement = statement[0:-1]
+    statement += ')'
+    db.execute(statement)
+    return
+
+
 def join_circle(userid, circleid, sincetime):
     i = membership.insert()
     i.execute(member_id=userid, circle_id=circleid, since=sincetime)
