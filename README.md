@@ -3,15 +3,12 @@
 ##TODO
 Y:
 
-I will convert date to string in logic layer
-
-Comment to user?
-
 X:
 
 situation of no such object?
 
 ## student
+
 find
 
 add
