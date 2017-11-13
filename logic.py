@@ -14,8 +14,24 @@ def login(student_id, password):
         return None
 
 
+def get_schools_l():
+    schools = ["Columbia", "NJU", "NFLS", "Yale"]
+    d = []
+    for i in range(0, len(schools)):
+        d.append({"school_id": i, "school_name": schools[i]})
+    return d
+
+
 def get_student_l(user_id):
     return find_student(user_id)
+
+
+def create_student_l(student):
+    print(str(student))
+    student['user_id'] = 17
+    student['password'] = "bbrownlau"
+    student['since'] = datetime.datetime.now()
+    return student
 
 
 def update_student_l(student):

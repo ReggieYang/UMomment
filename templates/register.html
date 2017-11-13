@@ -1,0 +1,83 @@
+<html>
+<head>
+    {% include 'header.html' %}
+</head>
+
+<body>
+
+<div class='container'>
+    <!--<form action='/student/create/' method='post'>-->
+    <label for="nick_name">Nick Name</label>
+    <input type="text" id="nick_name" name='nick_name' class="form-control"
+           required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name='email' class="form-control"
+           required>
+
+    <label for="avatar">Avatar</label>
+    <input type="text" id="avatar" name='avatar' class="form-control"
+           required>
+
+    <label>School</label>
+
+    <div class="dropdown">
+        <button class="btn dropdown-toggle btn-secondary w-100 form-control" id="school-dd"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            school name
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for s in schools %}
+            <a class="dropdown-item school-item" id="school-item-{{s['school_id']}}">
+                {{s['school_name']}}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name='password'
+           class="form-control"
+           required>
+
+    <label for="introduction">Introduction</label>
+    <input type="text" id="introduction" name='introduction'
+           class="form-control"
+           required>
+    <div class="row">
+        <div class="col-2">
+            <button class="btn btn-lg btn-primary btn-block register" type="submit">register</button>
+        </div>
+    </div>
+
+    <!--</form>-->
+</div>
+</body>
+
+<script>
+    $(".school-item").click(function () {
+        var selText = $(this).text();
+        $("#school-dd").text(selText);
+        $('#school-dd').val($(this).attr('id').split('-')[2]);
+    });
+
+    $(".register").click(function () {
+        var inputs = ["nick_name", "password", "email", "introduction", "avatar"];
+        var map = {"school_id": $("#school-dd").val()};
+        inputs.forEach(i => {
+            map[i] = $("#" + i).val();
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: "/student/create/",
+            dataType: "text",
+            data: map,
+            success: (res) => {
+                window.location.href = '/student/';
+            }
+        });
+
+    });
+</script>
+
+</html>

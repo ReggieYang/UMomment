@@ -7,7 +7,8 @@
 {% include 'navbar.html' %}
 <div class='container'>
     <div class="card" style="width: 10rem;">
-        <img class="card-img-top" src="{{ session['user']['avatar'] }}" alt="Card image cap">
+        <img class="card-img-top" src="{{ session['user']['avatar'] }}"
+             onerror="this.src='https://c1.staticflickr.com/5/4583/38319711966_405f49d610_o.gif'" alt="Card image cap">
     </div>
     <form action='/student/update/' method='post'>
         <label for="user_id">UMoment id</label>

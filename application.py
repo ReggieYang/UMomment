@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
     comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
-    get_all_circle_l, join_circle_l
+    get_all_circle_l, join_circle_l, get_schools_l, create_student_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -28,6 +28,21 @@ def args2dict(request_args, args):
 @application.route('/')
 def home_page():
     return render_template('login.html')
+
+
+@application.route('/register/')
+def register_page():
+    return render_template('register.html', schools=get_schools_l())
+
+
+@application.route('/student/create/', methods=['POST'])
+def create_student():
+    args = ["nick_name", "avatar",  "email", "password",
+            "introduction", "school_id"]
+    student = args2dict(request, args)
+    new_student = create_student_l(student)
+    session['user'] = new_student
+    return 'success'
 
 
 @application.route('/student/')
@@ -75,7 +90,7 @@ def set_followship():
         follow(follower, following)
 
 
-@application.route('/school/show/', methods=['POST'])
+@application.route('/school/show/', methods=['GET'])
 def get_school():
     return
 
