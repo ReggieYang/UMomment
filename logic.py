@@ -2,7 +2,8 @@ import json
 
 import datetime
 
-from dao.student_dao import find_student, update_student
+from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
+    find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment
 
 
 def login(student_id, password):
@@ -14,11 +15,7 @@ def login(student_id, password):
 
 
 def get_schools_l():
-    schools = ["Columbia", "NJU", "NFLS", "Yale"]
-    d = []
-    for i in range(0, len(schools)):
-        d.append({"school_id": i, "school_name": schools[i]})
-    return d
+    return find_all_schools()
 
 
 def get_student_l(user_id):
@@ -26,13 +23,13 @@ def get_student_l(user_id):
 
 
 def create_student_l(student):
-    print(str(student))
-    student['user_id'] = 17
-    return student
+    student['since'] = str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    create_student(student)
+    return find_student(get_student_by_name(student['nick_name'])['user_id'])
 
 
 def get_student_by_name(nick_name):
-    return {"user_id": "12"}
+    return find_student_by_nickname(nick_name)
 
 
 def update_student_l(student):
@@ -41,29 +38,27 @@ def update_student_l(student):
     update_student(user_id, student)
 
 
-def follow(user_id, following_id):
-    print(str(user_id) + 'follow' + str(following_id))
+def follow_l(user_id, following_id):
+    follow(user_id, following_id, datetime.datetime.now())
     return
 
 
-def unfollow(user_id, following_id):
-    print(str(user_id) + 'unfollow' + str(following_id))
+def unfollow_l(user_id, following_id):
+    unfollow(user_id, following_id)
     return
 
 
 def my_following(user_id):
-    return [{"user_id": 123, "nick_name": "Terry", "since": "2015-09-02"},
-            {"user_id": 13, "nick_name": "Terry", "since": "2015-09-03"}]
+    return find_my_followings(user_id)
 
 
 def my_follower(user_id):
-    return [{"user_id": 7, "nick_name": "Scott", "since": "2015-01-02"},
-            {"user_id": 9, "nick_name": "Lebron", "since": "2015-02-03"}]
+    return find_my_followers(user_id)
 
 
 def get_my_moment(user_id):
     # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
-    return [{"author_id": "1", "like": 0, "moment_id": 123, "like_count": 123, "author_name": "Reggie",
+    return [{"author_id": "1", "like": 1, "moment_id": 2, "like_count": 123, "author_name": "Reggie",
              "content": "Philadelphia center Joel Embiid has agreed to a five-year, $148 million designated rookie"
                         " scale max extension, league sources told ESPN.",
              "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
@@ -73,13 +68,13 @@ def get_my_moment(user_id):
 
 
 def like_moment_l(moment_id, user_id):
-    # print(str(user_id) + 'like' + str(moment_id))
-    return 122
+    like_moment({"moment_id": moment_id, "user_id": user_id, "time": str(datetime.datetime.now())})
+    return
 
 
 def unlike_moment_l(moment_id, user_id):
-    # print(str(user_id) + 'unlike' + str(moment_id))
-    return 25
+    unlike_moment(user_id, moment_id)
+    return
 
 
 def comment_moment_l(comment):
@@ -88,7 +83,8 @@ def comment_moment_l(comment):
 
 
 def create_moment_l(moment):
-    print(str(moment))
+    moment['time'] = str(datetime.datetime.now())
+    insert_moment(moment)
     return
 
 

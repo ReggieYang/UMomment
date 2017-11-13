@@ -105,18 +105,20 @@
 <script type="text/javascript">
     $(".like-button").click(function () {
         let moment_id = $(this).attr('id').split("-")[1];
-        let jsonData = {"moment_id": moment_id, "like": $(this).text()};
+        let jsonData = {"moment_id": moment_id, "like": $(this).text().trim()};
         $.ajax({
             type: 'POST',
             url: "/moment/like/",
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                $("#like-count-" + moment_id).text(res);
-                if ($(this).text() === 'like') {
+                let lc = $("#like-count-" + moment_id);
+                if ($(this).text().trim() === 'like') {
+                    lc.text(parseInt(lc.text().trim()) + 1);
                     $(this).text('unlike');
                 }
                 else {
+                    lc.text(parseInt(lc.text().trim()) - 1);
                     $(this).text('like');
                 }
             }

@@ -2,7 +2,7 @@ import os
 import datetime
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
-from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
+from logic import login, update_student_l, follow_l, unfollow_l, get_my_moment, like_moment_l, unlike_moment_l, \
     comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
     get_all_circle_l, join_circle_l, get_schools_l, create_student_l, create_moment_l, get_my_circle, create_trend_l, \
     create_circle_l, my_following, my_follower, get_student_by_name
@@ -33,7 +33,7 @@ def register_page():
 
 
 @application.route('/student/create/', methods=['POST'])
-def create_student():
+def register_student():
     args = ["nick_name", "avatar", "email", "password",
             "introduction", "school_id"]
     student = args2dict(request, args)
@@ -83,14 +83,15 @@ def set_followship():
     if request.method == 'GET':
         following = request.args.get('follower_id')
         if request.args.get('unfollow') == '1':
-            unfollow(follower, following)
+            unfollow_l(follower, following)
         else:
-            follow(follower, following)
+            follow_l(follower, following)
         return redirect('/discover/')
     else:
         following_name = request.form['follower_name']
         following = get_student_by_name(following_name)
-        follow(follower, following['user_id'])
+        if 'user_id' in following:
+            follow_l(follower, following['user_id'])
         return redirect('/discover/')
 
 
@@ -182,19 +183,19 @@ def post_moment():
     args = ["content", "image"]
     moment = args2dict(request, args)
     moment['author_id'] = session['user']['user_id']
-    moment['time'] = datetime.datetime.now()
     create_moment_l(moment)
     return redirect('/moment/')
 
 
 @application.route('/moment/like/', methods=['POST'])
-def like_moment():
+def like_mom():
     moment_id = request.form['moment_id']
     user_id = session['user']['user_id']
     if request.form['like'] == 'like':
-        return str(like_moment_l(moment_id, user_id))
+        like_moment_l(moment_id, user_id)
     else:
-        return str(unlike_moment_l(moment_id, user_id))
+        unlike_moment_l(moment_id, user_id)
+    return 'success'
 
 
 @application.route('/moment/comment/', methods=['POST'])
