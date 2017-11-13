@@ -37,6 +37,16 @@ def row2dict(row):
     return d
 
 
+def multirow2listdict(row):
+    list = []
+    for rs in row:
+        dict = {}
+        for key in rs.keys():
+            dict[key] = rs[key]
+        list.append(dict)
+    return list
+
+
 def create_student(info):
     statement = "INSERT INTO student ("
     for key in info:
@@ -97,6 +107,21 @@ def unfollow(followerid, followedid):
     return
 
 
+def find_student_by_nickname(nickname):
+    result = student.select(student.c.nick_name == nickname)
+    resultExe = result.execute()
+    rs = resultExe.fetchone()
+    s = {}
+    s['user_id']=rs.user_id
+    return s
+
+# def find_my_followings(userid):
+#     followingid = followership.select(followership.c.follower_id==userid).alias("follwingid")
+#     result = student.select(student.c.user_id==followingid.c.followered)
+
+
+
+
 def join_circle(userid, circleid, sincetime):
     i = membership.insert()
     i.execute(member_id=userid, circle_id=circleid, since=sincetime)
@@ -111,22 +136,12 @@ def find_circle(circleid):
     return s
 
 
-# def find_all_circle_user_notin(userid)
-
-
-def multirow2dict(row):
-    d = {}
-    for tem in row:
-        d[tem.school_id] = tem.school_name
-    return d
-
-
 # return all the pairs of school id and school name
 def find_all_schools():
     school = Table('school', metadata, autoload=True)
     s = school.select()
     rs = s.execute()
-    d = multirow2dict(rs)
+    d = multirow2listdict(rs)
     return d
 
 
