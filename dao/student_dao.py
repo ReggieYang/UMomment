@@ -9,6 +9,9 @@ metadata = MetaData(db)
 
 student = Table('student', metadata, autoload=True)
 followership = Table('followership', metadata, autoload=True)
+membership = Table('membership', metadata, autoload=True)
+moment = able('moment', metadata, autoload=True)
+
 
 def quotevalue(value):
     statement = ''
@@ -18,6 +21,7 @@ def quotevalue(value):
     if type(value) == type('a'):
         statement += "'"
     return statement
+
 
 def row2dict(row):
     d = {}
@@ -84,3 +88,51 @@ def unfollow(followerid, followedid):
     statement += followedid
     db.execute(statement)
     return
+
+
+def join_circle(userid, circleid, sincetime):
+    i = membership.insert()
+    i.execute(member_id=userid, circle_id=circleid, since=sincetime)
+    return
+
+
+def find_circle(circle_id):
+    result = circle.select(circle.c.circle_id == circleid)
+    resultExe = result.execute()
+    rs = resultExe.fetchone()
+    s = row2dict(rs)
+    return s
+
+#def find_all_circle_user_notin(userid)
+
+
+def multirow2dict(row):
+    d = {}
+    for tem in row:
+        d[tem.school_id] = tem.school_name
+    return d
+
+
+#return all the pairs of school id and school name
+def find_all_schools():
+    school = Table('school', metadata, autoload=True)
+    s = school.select()
+    rs = s.execute()
+    d = multirow2dict(rs)
+    return d
+
+
+# def post_moment(info):
+#     statement = "INSERT INTO moment ("
+#     for key in info:
+#         statement += key
+#         statement += ','
+#     statement = statement[0:-1]
+#     statement += ') VALUES ('
+#     for key in info:
+#         statement += quotevalue(info[key])
+#         statement += ','
+#     statement = statement[0:-1]
+#     statement += ')'
+#     db.execute(statement)
+#     return
