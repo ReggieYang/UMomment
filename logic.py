@@ -4,7 +4,8 @@ import datetime
 
 from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
     find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment, \
-    comment_trend, comment_moment, post_trend, like_trend, unlike_trend, post_circle, join_circle, find_circles_join
+    comment_trend, comment_moment, post_trend, like_trend, unlike_trend, post_circle, join_circle, find_circles_join, \
+    find_moments
 
 
 def login(student_id, password):
@@ -58,14 +59,10 @@ def my_follower(user_id):
 
 
 def get_my_moment(user_id):
-    # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
-    return [{"author_id": "1", "like": 0, "moment_id": 2, "like_count": 123, "author_name": "Reggie",
-             "content": "Philadelphia center Joel Embiid has agreed to a five-year, $148 million designated rookie"
-                        " scale max extension, league sources told ESPN.",
-             "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-            {"author_id": "2", "content": "this outfit", "like": 1, "moment_id": 12, "like_count": 3,
-             "image": "https://pbs.twimg.com/media/DOUFsExV4AE2WyL.jpg:large", "author_name": "Xfl",
-             "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}]
+    moments = find_moments(user_id)
+    for i in range(0, len(moments)):
+        moments[i]['time'] = moments[i]['time'].strftime("%Y-%m-%d %H:%M")
+    return moments
 
 
 def like_moment_l(moment_id, user_id):
@@ -80,6 +77,7 @@ def unlike_moment_l(moment_id, user_id):
 
 def comment_moment_l(comment):
     comment['time'] = str(datetime.datetime.now())
+    comment['to_user'] = get_student_by_name(comment['to_user'])['user_id']
     comment_moment(comment)
     return
 
@@ -91,11 +89,11 @@ def create_moment_l(moment):
 
 
 def get_comment_momment_l(moment_id):
-    return [{"author_name": "ReggieYang", "to_user": "Xfl", "content": "Hello", "author_id": 3,
+    return [{"nick_name": "ReggieYang", "to_user": "Xfl", "content": "Hello", "author_id": 3,
              "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-            {"author_name": "Naruhodou", "to_user": "Mitsurugi", "content": "Hi", "author_id": 123,
+            {"nick_name": "Naruhodou", "to_user": "Mitsurugi", "content": "Hi", "author_id": 123,
              "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-            {"author_name": "Naruto", "to_user": "Sasuke", "content": "Haha", "author_id": 769,
+            {"nick_name": "Naruto", "to_user": "Sasuke", "content": "Haha", "author_id": 769,
              "time": "2017-06-05"}]
 
 
@@ -105,10 +103,10 @@ def get_my_trend_l(user_id):
     content2 = "The Golden State Warriors are making life difficult for more than just " \
                "their NBA contemporaries."
     # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
-    return [{"author_id": "1", "like": 0, "trend_id": 123, "like_count": 123, "author_name": "Reggie",
+    return [{"author_id": "1", "trend_id": 123, "like_count": 123, "author_name": "Reggie",
              "content": content1[0:50], "circle_id": 12, "circle_name": "NBA",
              "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-            {"author_id": "2", "content": content2[0:50], "like": 1, "trend_id": 12, "like_count": 3,
+            {"author_id": "2", "content": content2[0:50], "trend_id": 12, "like_count": 3,
              "image": "https://pbs.twimg.com/media/DOUFsExV4AE2WyL.jpg:large", "author_name": "Xfl",
              "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
              "circle_id": 122, "circle_name": "columbia buy sell memes"}]
@@ -126,15 +124,15 @@ def get_trend_l(trend_id):
                "enough. While it's not guaranteed, it's the most likely ending to the upcoming " \
                "campaign.\n\nWe're going a little more daring as we delve into five bold " \
                "Warriors' forecasts for 2017-18.\n"
-    return {"trend": {"author_id": "1", "like": 0, "trend_id": 1, "like_count": 123, "author_name": "Reggie",
+    return {"trend": {"author_id": "1", "like": 0, "trend_id": 1, "like_count": 123, "nick_name": "Reggie",
                       "content": content1, "circle_id": 12, "circle_name": "NBA",
                       "image": "https://pbs.twimg.com/media/DOZxjmvV4AEVBge.jpg:large",
                       "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-            "comments": [{"author_name": "ReggieYang", "content": "Hello", "author_id": 3,
+            "comments": [{"nick_name": "ReggieYang", "content": "Hello", "author_id": 3,
                           "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-                         {"author_name": "Naruhodou", "content": "Hi", "author_id": 123,
+                         {"nick_name": "Naruhodou", "content": "Hi", "author_id": 123,
                           "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-                         {"author_name": "Naruto", "content": "Haha", "author_id": 769,
+                         {"nick_name": "Naruto", "content": "Haha", "author_id": 769,
                           "time": "2017-06-05"}]}
 
 

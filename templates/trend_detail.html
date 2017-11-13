@@ -27,7 +27,7 @@
         <div class="col-sm-8 blog-main">
             <div class="blog-post">
                 <p class="blog-post-meta">{{trend['trend']['time']}} by
-                    <a href="#">{{trend['trend']['author_name']}}</a>
+                    <a href="#">{{trend['trend']['nick_name']}}</a>
                 </p>
                 {% for para in trend['trend']['content'].split('\n') %}
                 <p>{{para}}</p>
@@ -59,7 +59,7 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-6">
-                                <p class="card-text">{{c['author_name']}}</p>
+                                <p class="card-text">{{c['nick_name']}}</p>
                             </div>
                             <div class="col-6">
                                 <p class="card-text">{{c['time']}}</p>

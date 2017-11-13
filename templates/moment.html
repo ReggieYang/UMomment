@@ -38,7 +38,7 @@
         <div class="card-block">
             <div class="row">
                 <div class="col-6">
-                    <p class="card-text">{{d['author_name']}}</p>
+                    <p class="card-text">{{d['nick_name']}}</p>
                 </div>
                 <div class="col-6">
                     <p class="card-text">{{d['time']}}</p>
@@ -46,9 +46,9 @@
             </div>
             <p class="card-text">{{d['content']}}</p>
             <div class="row">
-                <div class="col-3">
+                <div class="col-2" style="padding-right: 0px">
                     <label class="btn btn-primary like-button" id="moment-{{d['moment_id']}}">
-                        {% if d['like'] == 0: %}
+                        {% if d['like_or_not'] == 0: %}
                         like
                         {% else: %}
                         unlike
@@ -56,13 +56,20 @@
                     </label>
                     <label id="like-count-{{d['moment_id']}}">{{ d['like_count'] }}</label>
                 </div>
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-4"><h4 style="text-align: right">@</h4></div>
+                        <div class="col-8"><input type="text" id="to_user" name='to_user' class="form-control"></div>
+                    </div>
+                </div>
+
                 <div class="col-4">
                     <input type="text" id="comment-content-{{d['moment_id']}}" class="form-control" required autofocus>
                 </div>
                 <div class="col-2">
                     <label class="btn btn-primary comment-button" id="comment-{{d['moment_id']}}">comment</label>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <label class="btn btn-primary comments" id="comments-{{d['moment_id']}}">see comments</label>
                 </div>
             </div>
@@ -84,7 +91,7 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-4">
-                                <p class="card-text">{{c['author_name']}}</p>
+                                <p class="card-text">{{c['nick_name']}}</p>
                             </div>
                             <div class="col-4">
                                 <p class="card-text">@{{c['to_user']}}</p>
@@ -128,14 +135,16 @@
     $(".comment-button").click(function () {
         var moment_id = $(this).attr('id').split("-")[1];
         let comment_content = $("#comment-content-" + moment_id).val();
-        let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": 1};
+        let to_user = $("#to_user").val();
+        let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": to_user};
         $.ajax({
             type: 'POST',
             url: "/moment/comment/",
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                $("#comment-content-" + moment_id).val("")
+                $("#comment-content-" + moment_id).val("");
+                $("#to_user").val("");
             }
         });
     });
