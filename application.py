@@ -8,7 +8,8 @@ from flask_cors import CORS
 
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
     comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
-    get_all_circle_l, join_circle_l, get_schools_l, create_student_l, create_moment_l
+    get_all_circle_l, join_circle_l, get_schools_l, create_student_l, create_moment_l, get_my_circle, create_trend_l, \
+    create_circle_l
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -100,9 +101,15 @@ def get_student():
     return
 
 
-@application.route('/group/create/', methods=['POST'])
-def create_group():
-    return
+@application.route('/circle/create/', methods=['POST'])
+def create_circle():
+    args = ["introduction", "circle_name", "announcement", 'icon']
+    circle = args2dict(request, args)
+    circle['admin_id'] = session['user']['user_id']
+    circle['time'] = datetime.datetime.now()
+    circle['school_id'] = session['user']['school_id']
+    create_circle_l(circle)
+    return redirect('/circle/')
 
 
 @application.route('/circle/', methods=['GET'])
@@ -130,13 +137,19 @@ def leave_group():
 def my_trend():
     user_id = session['user']['user_id']
     trends = get_my_trend_l(user_id)
-    context = dict(trends=trends)
+    my_circles = get_my_circle(user_id)
+    context = dict(trends=trends, circles=my_circles)
     return render_template('trend.html', **context)
 
 
 @application.route('/trend/create/', methods=['POST'])
 def post_trend():
-    return
+    args = ["content", "circle_id", "image"]
+    trend = args2dict(request, args)
+    trend['author_id'] = session['user']['user_id']
+    trend['time'] = datetime.datetime.now()
+    create_trend_l(trend)
+    return redirect('/trend/')
 
 
 @application.route('/trend/like/', methods=['POST'])
@@ -223,18 +236,5 @@ def get_moment():
     return
 
 
-# @application.route('/search/<keyword>')
-# def show_post(keyword):
-#     es = es_conn()
-#     resp = flask.Response(parse_res(es, keyword))
-#     resp.headers['Content-Type'] = 'application/json'
-#     return resp
-
-
 if __name__ == '__main__':
-    # application.secret_key = 'super secret key'
-    # application.config['SESSION_TYPE'] = 'filesystem'
-
-    # application.debug = True
-
     application.run(host='127.0.0.1', port=6565, debug=True)

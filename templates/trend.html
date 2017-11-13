@@ -13,6 +13,30 @@
 <body>
 {% include 'navbar.html' %}
 <div class="container">
+    <div class="card">
+        <div class="card-block">
+            <form action='/trend/create/' method='post'>
+                <label>new trend</label>
+                <textarea class="form-control" name="content" rows="3" required></textarea>
+                <label>image</label>
+                <input type="url" name='image' class="form-control">
+                <label>group</label>
+                <select class="form-control" name="circle_id" id="exampleFormControlSelect1">
+                    {% for c in circles %}
+                    <option value="{{c['circle_id']}}">{{c['circle_name']}}</option>
+                    {% endfor %}
+                </select>
+                <div class="row">
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button class="btn btn-lg btn-primary float-right btn-block w-75 p-1"
+                                type="submit">post
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     {% for d in trends:%}
     <div class="card momment-card">
         <div class="card-block">

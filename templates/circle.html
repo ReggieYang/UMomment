@@ -13,6 +13,28 @@
 <body>
 {% include 'navbar.html' %}
 <div class="container">
+    <div class="card">
+        <div class="card-block">
+            <form action='/circle/create/' method='post'>
+                <label>circle name</label>
+                <input type="text" name='circle_name' class="form-control" required>
+                <label>introduction</label>
+                <textarea class="form-control" name="introduction" rows="3" required></textarea>
+                <label>announcement</label>
+                <textarea class="form-control" name="announcement" rows="3"></textarea>
+                <label>icon</label>
+                <input type="url" name='icon' class="form-control">
+                <div class="row">
+                    <div class="col-10"></div>
+                    <div class="col-2">
+                        <button class="btn btn-lg btn-primary float-right btn-block w-100 p-1"
+                                type="submit">create group
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     {% for d in circles:%}
     <div class="card momment-card">
         <div class="card-block">
@@ -21,6 +43,8 @@
                     <div class="row">
                         <div class="col-6">
                             <h4 class="card-text">{{d['circle_name']}}</h4></div>
+                        <div class="col-4"></div>
+                        <div class="col-2">{{d['admin_name']}}</div>
                     </div>
                     <div class="row">
                         <div class="col-6">

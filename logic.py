@@ -134,8 +134,23 @@ def unlike_trend_l(moment_id, user_id):
     return 37
 
 
+def create_trend_l(trend):
+    print(str(trend))
+    return
+
+
 def comment_trend_l(comment):
     print(str(comment))
+    return
+
+
+def get_my_circle(user_id):
+    return [{"circle_id": 1, "circle_name": "Terrilove"}, {"circle_id": 12, "circle_name": "Timofev"},
+            {"circle_id": 76, "circle_name": "Wilkins"}]
+
+
+def create_circle_l(circle):
+    print(str(circle))
     return
 
 
@@ -146,9 +161,9 @@ def get_all_circle_l(school_id):
                      "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
              "introduction": "This group is like wolf of wall street. there’s buying "
                              "and selling, cutthroat competition and drugs. it’s a stock exchange",
-             "announcement": "Buy and cell"},
+             "announcement": "Buy and cell", "admin_id": 12, "admin_name": "Harden"},
             {"circle_id": 23, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
-             "announcement": ""}]
+             "announcement": "", "admin_id": 1, "admin_name": "Rudy"}]
 
 
 def join_circle_l(circle_id, user_id):
