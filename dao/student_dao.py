@@ -175,10 +175,23 @@ def find_circles_join(userid):
 
 # return all the pairs of school id and school name
 def find_all_schools():
-    school = Table('school', metadata, autoload=True)
     s = school.select()
     rs = s.execute()
     d = multirow2listdict(rs)
+    return d
+
+
+# find the moments of mine and the people I follow
+def find_moments(userid):
+    statement = "SELECT moment.*, like_new_moment.liking_count FROM moment, (SELECT new_moment.moment_id, CASE "
+    statement += str(userid)
+    statement += " IN (SELECT lm.user_id FROM likingmoment lm WHERE lm.moment_id = new_moment.moment_id) WHEN TRUE THEN 1 ELSE 0 END AS liking_count FROM (SELECT moment.* FROM moment, (SELECT DISTINCT followed_id AS user_id FROM followership WHERE followed_id = "
+    statement += str(userid)
+    statement += " OR follower_id = "
+    statement += str(userid)
+    statement += ") AS friend WHERE moment.author_id = friend.user_id ORDER BY moment.time LIMIT 20) AS new_moment LEFT JOIN likingmoment ON new_moment.moment_id = likingmoment.moment_id GROUP BY new_moment.moment_id) AS like_new_moment WHERE moment.moment_id = like_new_moment.moment_id ORDER BY liking_count DESC"
+    result = db.execute(statement)
+    d = multirow2listdict(result)
     return d
 
 
@@ -240,6 +253,28 @@ def comment_moment(info):
     statement += ')'
     db.execute(statement)
     return
+
+def find_trends_in_circles(userid):
+    circleid = membership.select(membership.c.member_id == userid).alias("circleid")
+    trends = trend.select(circleid.c.circle_id==trend.c.circle_id)
+    result = trends.execute()
+    d = multirow2listdict(result)
+    return d
+
+def find_trend_comments(trendid):
+    trendinfo = trend.select(trendid==trend.c.trend_id)
+    result = {}
+    trendexe = trendinfo.execute()
+    trendone = trendexe.fetchone()
+    result["trend"] = row2dict(trendone)
+    trendinfo2 = trend.select(trendid == trend.c.trend_id).alias("trendinfo2")
+    commentinfo = trendcomment.select(trendcomment.c.trend_id==trendinfo2.c.trend_id).alias("commentinfo")
+    commentinfofull = select([student.c.nick_name, commentinfo],student.c.user_id==commentinfo.c.author_id)
+    commentexe = commentinfofull.execute()
+    result["comment"] = multirow2listdict(commentexe)
+    return result
+
+
 
 
 # info = {'trend_id':11, 'author_id':4, 'circle_id':2, 'content':'yyyy', 'time':'2017-10-09 21:47:31.127708'}
