@@ -256,9 +256,13 @@ def find_trends_in_circles(userid):
     d = multirow2listdict(result)
     return d
 
-# def find_comments_of_momment(momentid):
-#     commentinfo = momentcomment.select(momentcomment.c.moment_id==momentid).alias("commentinfo")
-#     commentinfoall = select([student.c.user_id,])
+def find_comments_of_momment(momentid):
+    statement = "SELECT S1.nick_name AS \"author_name\", S2.nick_name AS \"to_user\", M.content, M.author_id, M,time FROM student S1, student S2, momentcomment M WHERE M.moment_id = @ AND S1.user_id= M.author_id AND S2.user_id = M.to_user"
+    statement = statement.replace("@",str(momentid))
+    rs = db.execute(statement)
+    result = multirow2listdict(rs)
+    return result
+
 
 def find_trend_comments(trendid):
     trendinfo = trend.select(trendid==trend.c.trend_id)
