@@ -1,15 +1,11 @@
-import json
-
 import os
-
 import datetime
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
-
 from logic import login, update_student_l, follow, unfollow, get_my_moment, like_moment_l, unlike_moment_l, \
     comment_moment_l, get_comment_momment_l, get_my_trend_l, get_trend_l, unlike_trend_l, like_trend_l, comment_trend_l, \
     get_all_circle_l, join_circle_l, get_schools_l, create_student_l, create_moment_l, get_my_circle, create_trend_l, \
-    create_circle_l
+    create_circle_l, my_following, my_follower, get_student_by_name
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 application = Flask(__name__, template_folder=tmpl_dir)
@@ -81,24 +77,30 @@ def update_st():
     return redirect('/student/')
 
 
-@application.route('/student/follow/', methods=['POST'])
+@application.route('/student/follow/', methods=['GET', 'POST'])
 def set_followship():
-    follower = request.form['follower_id']
-    following = request.form['following_id']
-    if request.form['unfollow'] == 1:
-        unfollow(follower, following)
+    follower = session['user']['user_id']
+    if request.method == 'GET':
+        following = request.args.get('follower_id')
+        if request.args.get('unfollow') == '1':
+            unfollow(follower, following)
+        else:
+            follow(follower, following)
+        return redirect('/discover/')
     else:
-        follow(follower, following)
+        following_name = request.form['follower_name']
+        following = get_student_by_name(following_name)
+        follow(follower, following['user_id'])
+        return redirect('/discover/')
 
 
-@application.route('/school/show/', methods=['GET'])
-def get_school():
-    return
-
-
-@application.route('/school/showStudent/', methods=['POST'])
-def get_student():
-    return
+@application.route('/discover/', methods=['GET'])
+def discover_page():
+    user_id = session['user']['user_id']
+    following = my_following(user_id)
+    follower = my_follower(user_id)
+    context = dict(following=following, follower=follower)
+    return render_template('discover.html', **context)
 
 
 @application.route('/circle/create/', methods=['POST'])
@@ -126,11 +128,6 @@ def join_circle():
     user_id = session['user']['user_id']
     join_circle_l(circle_id, user_id)
     return 'success'
-
-
-@application.route('/group/leave/', methods=['POST'])
-def leave_group():
-    return
 
 
 @application.route('/trend/', methods=['GET'])
@@ -180,11 +177,6 @@ def get_trend():
     return render_template('trend_detail.html', **context)
 
 
-@application.route('/moment/delete/', methods=['POST'])
-def delete_moment():
-    return
-
-
 @application.route('/moment/create/', methods=['POST'])
 def post_moment():
     args = ["content", "image"]
@@ -228,12 +220,6 @@ def get_moment_comment():
     comments = get_comment_momment_l(request.form['moment_id'])
     session['comments'] = comments
     return 'success'
-
-
-@application.route('/moment/find/', methods=['POST'])
-def get_moment():
-    # return render_template('moment.html')
-    return
 
 
 if __name__ == '__main__':

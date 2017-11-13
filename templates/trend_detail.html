@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <title>Trend Detail</title>
     {% include 'header.html' %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,7 +27,8 @@
         <div class="col-sm-8 blog-main">
             <div class="blog-post">
                 <p class="blog-post-meta">{{trend['trend']['time']}} by
-                    <a href="#">{{trend['trend']['author_name']}}</a></p>
+                    <a href="#">{{trend['trend']['author_name']}}</a>
+                </p>
                 {% for para in trend['trend']['content'].split('\n') %}
                 <p>{{para}}</p>
                 {% endfor %}
@@ -57,7 +59,8 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-6">
-                                <p class="card-text">{{c['author_name']}}</p></div>
+                                <p class="card-text">{{c['author_name']}}</p>
+                            </div>
                             <div class="col-6">
                                 <p class="card-text">{{c['time']}}</p>
                             </div>

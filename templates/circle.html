@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Circle</title>
     {% include 'header.html' %}
     <style>
         div.momment-card {
@@ -27,8 +28,8 @@
                 <div class="row">
                     <div class="col-10"></div>
                     <div class="col-2">
-                        <button class="btn btn-lg btn-primary float-right btn-block w-100 p-1"
-                                type="submit">create group
+                        <button class="btn btn-lg btn-primary float-right btn-block w-100 p-1" type="submit">
+                            create group
                         </button>
                     </div>
                 </div>
@@ -42,13 +43,15 @@
                 <div class="col-10">
                     <div class="row">
                         <div class="col-6">
-                            <h4 class="card-text">{{d['circle_name']}}</h4></div>
+                            <h4 class="card-text">{{d['circle_name']}}</h4>
+                        </div>
                         <div class="col-4"></div>
                         <div class="col-2">{{d['admin_name']}}</div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <p class="card-text">{{d['announcement']}}</p></div>
+                            <p class="card-text">{{d['announcement']}}</p>
+                        </div>
                     </div>
                     <p class="card-text">{{d['introduction']}}</p>
                     <div class="row">
