@@ -112,14 +112,26 @@ def find_student_by_nickname(nickname):
     resultExe = result.execute()
     rs = resultExe.fetchone()
     s = {}
-    s['user_id']=rs.user_id
+    s['user_id'] = rs.user_id
     return s
 
-# def find_my_followings(userid):
-#     followingid = followership.select(followership.c.follower_id==userid).alias("follwingid")
-#     result = student.select(student.c.user_id==followingid.c.followered)
+
+# find those users that I follow
+def find_my_followings(userid):
+    followingid = followership.select(followership.c.follower_id == userid).alias("follwingid")
+    result = student.select(student.c.user_id == followingid.c.followed_id)
+    rs = result.execute()
+    d = multirow2listdict(rs)
+    return d
 
 
+# find those users that follow me
+def find_my_followers(userid):
+    followedid = followership.select(followership.c.followed_id == userid).alias("followedid")
+    result = student.select(student.c.user_id == followedid.c.follower_id)
+    rs = result.execute()
+    d = multirow2listdict(rs)
+    return d
 
 
 def join_circle(userid, circleid, sincetime):
