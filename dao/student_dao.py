@@ -165,6 +165,14 @@ def find_circle(circleid):
     return s
 
 
+def find_circles_join(userid):
+    circleid = membership.select(membership.c.member_id == userid).alias("circleid")
+    result = circle.select(circle.c.circle_id == circleid.c.circle_id)
+    rs = result.execute()
+    d = multirow2listdict(rs)
+    return d
+
+
 # return all the pairs of school id and school name
 def find_all_schools():
     school = Table('school', metadata, autoload=True)
