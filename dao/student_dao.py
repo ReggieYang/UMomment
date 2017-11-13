@@ -249,35 +249,35 @@ def comment_moment(info):
     db.execute(statement)
     return
 
+
 def find_trends_in_circles(userid):
     circleid = membership.select(membership.c.member_id == userid).alias("circleid")
-    trends = trend.select(circleid.c.circle_id==trend.c.circle_id)
+    trends = trend.select(circleid.c.circle_id == trend.c.circle_id)
     result = trends.execute()
     d = multirow2listdict(result)
     return d
 
+
 def find_comments_of_moment(momentid):
     statement = "SELECT S1.nick_name AS \"author_name\", S2.nick_name AS \"to_user\", M.content, M.author_id, M,time FROM student S1, student S2, momentcomment M WHERE M.moment_id = @ AND S1.user_id= M.author_id AND S2.user_id = M.to_user"
-    statement = statement.replace("@",str(momentid))
+    statement = statement.replace("@", str(momentid))
     rs = db.execute(statement)
     result = multirow2listdict(rs)
     return result
 
 
 def find_trend_comments(trendid):
-    trendinfo = trend.select(trendid==trend.c.trend_id)
+    trendinfo = trend.select(trendid == trend.c.trend_id)
     result = {}
     trendexe = trendinfo.execute()
     trendone = trendexe.fetchone()
     result["trend"] = row2dict(trendone)
     trendinfo2 = trend.select(trendid == trend.c.trend_id).alias("trendinfo2")
-    commentinfo = trendcomment.select(trendcomment.c.trend_id==trendinfo2.c.trend_id).alias("commentinfo")
-    commentinfofull = select([student.c.nick_name, commentinfo],student.c.user_id==commentinfo.c.author_id)
+    commentinfo = trendcomment.select(trendcomment.c.trend_id == trendinfo2.c.trend_id).alias("commentinfo")
+    commentinfofull = select([student.c.nick_name, commentinfo], student.c.user_id == commentinfo.c.author_id)
     commentexe = commentinfofull.execute()
     result["comment"] = multirow2listdict(commentexe)
     return result
-
-
 
 
 # info = {'trend_id':11, 'author_id':4, 'circle_id':2, 'content':'yyyy', 'time':'2017-10-09 21:47:31.127708'}
