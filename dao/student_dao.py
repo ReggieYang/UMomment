@@ -183,13 +183,8 @@ def find_all_schools():
 
 # find the moments of mine and the people I follow
 def find_moments(userid):
-    statement = "SELECT moment.*, like_new_moment.liking_count FROM moment, (SELECT new_moment.moment_id, CASE "
-    statement += str(userid)
-    statement += " IN (SELECT lm.user_id FROM likingmoment lm WHERE lm.moment_id = new_moment.moment_id) WHEN TRUE THEN 1 ELSE 0 END AS liking_count FROM (SELECT moment.* FROM moment, (SELECT DISTINCT followed_id AS user_id FROM followership WHERE followed_id = "
-    statement += str(userid)
-    statement += " OR follower_id = "
-    statement += str(userid)
-    statement += ") AS friend WHERE moment.author_id = friend.user_id ORDER BY moment.time LIMIT 20) AS new_moment LEFT JOIN likingmoment ON new_moment.moment_id = likingmoment.moment_id GROUP BY new_moment.moment_id) AS like_new_moment WHERE moment.moment_id = like_new_moment.moment_id ORDER BY liking_count DESC"
+    statement = "SELECT moment.*, s1.nick_name, like_new_moment.like_or_not, like_new_moment.liking_count FROM moment, (SELECT new_moment.moment_id, CASE @ IN (SELECT lm.user_id FROM likingmoment lm WHERE lm.moment_id = new_moment.moment_id) WHEN TRUE THEN 1 ELSE 0 END AS like_or_not, count(likingmoment.user_id) AS liking_count FROM (SELECT moment.* FROM moment, (SELECT DISTINCT followed_id AS user_id FROM followership WHERE followed_id = @ OR follower_id = @) AS friend WHERE moment.author_id = friend.user_id ORDER BY moment.time LIMIT 20) AS new_moment LEFT JOIN likingmoment ON new_moment.moment_id = likingmoment.moment_id GROUP BY new_moment.moment_id) AS like_new_moment, student s1 WHERE moment.moment_id = like_new_moment.moment_id AND moment.author_id = s1.user_id ORDER BY liking_count DESC"
+    statement = statement.replace("@", str(userid))
     result = db.execute(statement)
     d = multirow2listdict(result)
     return d
@@ -260,6 +255,10 @@ def find_trends_in_circles(userid):
     result = trends.execute()
     d = multirow2listdict(result)
     return d
+
+# def find_comments_of_momment(momentid):
+#     commentinfo = momentcomment.select(momentcomment.c.moment_id==momentid).alias("commentinfo")
+#     commentinfoall = select([student.c.user_id,])
 
 def find_trend_comments(trendid):
     trendinfo = trend.select(trendid==trend.c.trend_id)
