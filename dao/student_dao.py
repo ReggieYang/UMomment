@@ -20,6 +20,7 @@ trendcomment = Table('trendcomment', metadata, autoload=True)
 school = Table('school', metadata, autoload=True)
 
 
+# add quote to str data, add no quote to nonstr data, return the data.
 def quotevalue(value):
     statement = ''
     if type(value) == type('a'):
@@ -30,6 +31,7 @@ def quotevalue(value):
     return statement
 
 
+# return the dict form of attribute and value of one-line sql result
 def row2dict(row):
     d = {}
     for rs in row.keys():
@@ -37,6 +39,8 @@ def row2dict(row):
     return d
 
 
+# return the list form of attribute and value of multi=-lines sql results.
+# each result in one dict
 def multirow2listdict(row):
     list = []
     for rs in row:
@@ -47,6 +51,7 @@ def multirow2listdict(row):
     return list
 
 
+# insert student info into table student
 def create_student(info):
     statement = "INSERT INTO student ("
     for key in info:
@@ -67,6 +72,7 @@ def create_student(info):
     return
 
 
+# search student info in student table with student_id
 def find_student(id):
     result = student.select(student.c.user_id == id)
     resultExe = result.execute()
@@ -77,7 +83,7 @@ def find_student(id):
     return s
 
 
-# All the info about update
+# update student info in student table, given the student_id and all the info to be updated
 def update_student(id, info):
     statement = "UPDATE student SET "
     for key in info:
@@ -92,12 +98,14 @@ def update_student(id, info):
     return
 
 
+# insert new followership
 def follow(followerid, followedid, sincetime):
     i = followership.insert()
     i.execute(follower_id=followerid, followed_id=followedid, since=sincetime)
     return
 
 
+# delete followership
 def unfollow(followerid, followedid):
     statement = "DELETE FROM followership WHERE follower_id="
     statement += str(followerid)
@@ -107,6 +115,7 @@ def unfollow(followerid, followedid):
     return
 
 
+# use user_id to find the nickname
 def find_student_by_nickname(nickname):
     result = student.select(student.c.nick_name == nickname)
     resultExe = result.execute()
@@ -116,7 +125,7 @@ def find_student_by_nickname(nickname):
     return s
 
 
-# find those users that I follow
+# find those users info that I follow
 def find_my_followings(userid):
     followingid = followership.select(followership.c.follower_id == userid).alias("follwingid")
     result = student.select(student.c.user_id == followingid.c.followed_id)
@@ -125,7 +134,7 @@ def find_my_followings(userid):
     return d
 
 
-# find those users that follow me
+# find those users info that follow me
 def find_my_followers(userid):
     followedid = followership.select(followership.c.followed_id == userid).alias("followedid")
     result = student.select(student.c.user_id == followedid.c.follower_id)
@@ -134,6 +143,7 @@ def find_my_followers(userid):
     return d
 
 
+# insert new circle
 # info = {'circle_id':10, 'circle_name':'yes', 'introduction':'Test for post circle', 'school_id':5, 'admin_id':4}
 def post_circle(info):
     statement = "INSERT INTO circle ("
@@ -151,12 +161,14 @@ def post_circle(info):
     return
 
 
+# insert new membership record
 def join_circle(userid, circleid, sincetime):
     i = membership.insert()
     i.execute(member_id=userid, circle_id=circleid, since=sincetime)
     return
 
 
+# search circle info using circleid
 def find_circle(circleid):
     result = circle.select(circle.c.circle_id == circleid)
     resultExe = result.execute()
@@ -165,6 +177,7 @@ def find_circle(circleid):
     return s
 
 
+# search circles that the user joined
 def find_circles_join(userid):
     circleid = membership.select(membership.c.member_id == userid).alias("circleid")
     result = circle.select(circle.c.circle_id == circleid.c.circle_id)
@@ -190,6 +203,7 @@ def find_moments(userid):
     return d
 
 
+# insert new moment
 # info = {'moment_id':55, 'author_id': 5, 'content': 'yeah', 'time':'2017-10-09 19:28:30.824310'}
 def insert_moment(info):
     statement = "INSERT INTO moment ("
@@ -207,6 +221,7 @@ def insert_moment(info):
     return
 
 
+# insert new likingmoment
 # info = {'user_id':9, 'moment_id':41, 'time':'2017-10-09 19:42:43.579866'}
 def like_moment(info):
     statement = "INSERT INTO likingmoment ("
@@ -224,6 +239,7 @@ def like_moment(info):
     return
 
 
+# delete likingmoment record
 def unlike_moment(userid, momentid):
     statement = "DELETE FROM likingmoment WHERE user_id="
     statement += str(userid)
@@ -233,6 +249,7 @@ def unlike_moment(userid, momentid):
     return
 
 
+# insert new record on momentcomment
 # info = {'comment_id':12,'author_id':9,'to_user':1,'moment_id':55,'content':'yyyy','time':'2017-10-09 21:38:44.677678'}
 def comment_moment(info):
     statement = "INSERT INTO momentcomment ("
@@ -250,14 +267,18 @@ def comment_moment(info):
     return
 
 
+# give user_id, return all the trends in the circles this user joins with the nick_name of trend authors and the circle_name of circle
 def find_trends_in_circles(userid):
     circleid = membership.select(membership.c.member_id == userid).alias("circleid")
-    trends = trend.select(circleid.c.circle_id == trend.c.circle_id)
-    result = trends.execute()
+    trends = trend.select(circleid.c.circle_id == trend.c.circle_id).alias("trends")
+    rs = select([student.c.nick_name, circle.c.circle_name, trends],
+                (student.c.user_id == trends.c.author_id) & (circle.c.circle_id == trends.c.circle_id))
+    result = rs.execute()
     d = multirow2listdict(result)
     return d
 
 
+# search all the comments of the moment, given momentid
 def find_comments_of_moment(momentid):
     statement = "SELECT S1.nick_name AS \"author_name\", S2.nick_name AS \"to_user\", M.content, M.author_id, M,time FROM student S1, student S2, momentcomment M WHERE M.moment_id = @ AND S1.user_id= M.author_id AND S2.user_id = M.to_user"
     statement = statement.replace("@", str(momentid))
@@ -266,6 +287,7 @@ def find_comments_of_moment(momentid):
     return result
 
 
+# search all the comment of the trend, given trendid
 def find_trend_comments(trendid):
     trendinfo = trend.select(trendid == trend.c.trend_id)
     result = {}
@@ -280,6 +302,7 @@ def find_trend_comments(trendid):
     return result
 
 
+# insert new trend into table trend
 # info = {'trend_id':11, 'author_id':4, 'circle_id':2, 'content':'yyyy', 'time':'2017-10-09 21:47:31.127708'}
 def post_trend(info):
     statement = "INSERT INTO trend ("
@@ -297,6 +320,7 @@ def post_trend(info):
     return
 
 
+# insert new likingtrend record into table likingtrend
 def like_trend(info):
     statement = "INSERT INTO likingtrend ("
     for key in info:
@@ -313,6 +337,7 @@ def like_trend(info):
     return
 
 
+# delete likingtrend record
 def unlike_trend(userid, trendid):
     statement = "DELETE FROM likingtrend WHERE user_id="
     statement += str(userid)
@@ -322,6 +347,7 @@ def unlike_trend(userid, trendid):
     return
 
 
+# insert new comment on trend, giving the authorid, trendid, content and time
 # info = {'comment_id': 13, 'author_id': 6, 'trend_id': 11, 'content': 'nnnn', 'time': '2017-10-09 21:47:31.127708'}
 def comment_trend(info):
     statement = "INSERT INTO trendcomment ("
