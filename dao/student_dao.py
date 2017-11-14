@@ -186,6 +186,14 @@ def find_circles_join(userid):
     return d
 
 
+# search circle that the user didn't join
+def find_circles_not_join(userid):
+    statement = "select * from circle c where c.circle_id not in ( select m.circle_id from membership m where m.member_id = @)"
+    statement = statement.replace("@",str(userid))
+    rs = db.execute(statement)
+    d = multirow2listdict(rs)
+    return d
+
 # return all the pairs of school id and school name
 def find_all_schools():
     s = school.select()
@@ -288,12 +296,13 @@ def find_comments_of_moment(momentid):
 
 
 # search all the comment of the trend, given trendid
-def find_trend_comments(trendid):
-    trendinfo = trend.select(trendid == trend.c.trend_id)
+def find_trend_comments(trendid, userid):
+    statement = "SELECT t1.*, c1.circle_name, s1.nick_name, count(*), CASE @ IN (SELECT lt2.user_id FROM likingtrend lt2 WHERE lt2.trend_id = 1) WHEN TRUE THEN 1 ELSE 0 END AS like_or_not FROM trend t1, circle c1, student s1, likingtrend lt1 WHERE t1.trend_id = # AND t1.circle_id = c1.circle_id AND s1.user_id = t1.author_id AND lt1.trend_id = t1.trend_id GROUP BY t1.trend_id, c1.circle_name, s1.nick_name"
+    statement = statement.replace("@", str(trendid))
+    statement = statement.replace("#", str(userid))
     result = {}
-    trendexe = trendinfo.execute()
-    trendone = trendexe.fetchone()
-    result["trend"] = row2dict(trendone)
+    trendone = db.execute(statement)
+    result["trend"] = multirow2listdict(trendone)[0]
     trendinfo2 = trend.select(trendid == trend.c.trend_id).alias("trendinfo2")
     commentinfo = trendcomment.select(trendcomment.c.trend_id == trendinfo2.c.trend_id).alias("commentinfo")
     commentinfofull = select([student.c.nick_name, commentinfo], student.c.user_id == commentinfo.c.author_id)
