@@ -192,10 +192,11 @@ def find_circles_join(userid):
     return d
 
 
-# search circle that the user didn't join
-def find_circles_not_join(userid):
-    statement = "select c.circle_id, c.circle_name, c.admin_id, c.announcement, c.icon, c.introduction, c.school_id, s.nick_name from circle c, student s where s.user_id = c.admin_id and c.circle_id not in ( select m.circle_id from membership m where m.member_id = %s)"
-    rs = db.execute(statement,userid)
+# search circle that the user didn't join in his school
+def find_circles_not_join(userid, schoolid):
+    data = [schoolid, userid]
+    statement = "select c.circle_id, c.circle_name, c.admin_id, c.announcement, c.icon, c.introduction, c.school_id, s.nick_name from circle c, student s where s.user_id = c.admin_id and c.school_id=%s and c.circle_id not in ( select m.circle_id from membership m where m.member_id = %s)"
+    rs = db.execute(statement,data)
     d = multirow2listdict(rs)
     return d
 
