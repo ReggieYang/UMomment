@@ -129,7 +129,8 @@
             dataType: "text",
             data: jsonData,
             success: (res) => {
-                $("#comment-content-" + trend_id).val("")
+                $("#comment-content-" + trend_id).val("");
+                window.location.reload();
             }
         });
     });

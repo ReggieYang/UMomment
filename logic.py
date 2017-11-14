@@ -5,7 +5,7 @@ import datetime
 from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
     find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment, \
     comment_trend, comment_moment, post_trend, like_trend, unlike_trend, post_circle, join_circle, find_circles_join, \
-    find_moments, find_comments_of_moment, find_trend_comments, find_trends_in_circles
+    find_moments, find_comments_of_moment, find_trend_comments, find_trends_in_circles, find_circles_not_join
 
 
 def login(student_id, password):
@@ -98,47 +98,13 @@ def get_my_trend_l(user_id):
     for i in range(0, len(trends)):
         trends[i]['content'] = trends[i]['content'][0:150]
         trends[i]['time'] = str(trends[i]['time'].strftime("%Y-%m-%d %H:%M:%S"))
-    print(str(trends))
     return trends
-    # content1 = "Philadelphia center Joel Embiid has agreed to a five-year, $148 million " \
-    #            "designated rookie scale max extension, league sources told ESPN."
-    # content2 = "The Golden State Warriors are making life difficult for more than just " \
-    #            "their NBA contemporaries."
-    # # need a select on several tables, similar to what we wrote in the first part --- one of those 3 sql
-    # return [{"author_id": "1", "trend_id": 1, "author_name": "Reggie",
-    #          "content": content1[0:50], "circle_id": 12, "circle_name": "NBA",
-    #          "image": "", "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-    #         {"author_id": "2", "content": content2[0:50], "trend_id": 2, "like_count": 3,
-    #          "image": "https://pbs.twimg.com/media/DOUFsExV4AE2WyL.jpg:large", "author_name": "Xfl",
-    #          "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    #          "circle_id": 122, "circle_name": "columbia buy sell memes"}]
 
 
 def get_trend_l(trend_id, user_id=-1):
     trend = find_trend_comments(trend_id, user_id)
     print(str(trend))
     return trend
-    # content1 = "The Golden State Warriors are making life difficult for more than " \
-    #            "just their NBA contemporaries.\n\nHoops prognosticators of the bold " \
-    #            "variety, for instance, are having a tricky time dreaming bigger than " \
-    #            "the Dubs' reality.\n\nThey're dominating at once-in-a-generation levels." \
-    #            " They're evolving the sport and challenging long-held beliefs about what's " \
-    #            "possible inside the lines. They might have compiled the best roster ever" \
-    #            " assembled, and each iteration in this run always seems better than the " \
-    #            "last.\n\nThat's why predicting another title for this franchise isn't bold " \
-    #            "enough. While it's not guaranteed, it's the most likely ending to the upcoming " \
-    #            "campaign.\n\nWe're going a little more daring as we delve into five bold " \
-    #            "Warriors' forecasts for 2017-18.\n"
-    # return {"trend": {"author_id": "1", "like": 0, "trend_id": 1, "like_count": 123, "nick_name": "Reggie",
-    #                   "content": content1, "circle_id": 12, "circle_name": "NBA",
-    #                   "image": "https://pbs.twimg.com/media/DOZxjmvV4AEVBge.jpg:large",
-    #                   "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")},
-    #         "comments": [{"nick_name": "ReggieYang", "content": "Hello", "author_id": 3,
-    #                       "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-    #                      {"nick_name": "Naruhodou", "content": "Hi", "author_id": 123,
-    #                       "time": datetime.datetime.now().strftime("%Y-%m-%d")},
-    #                      {"nick_name": "Naruto", "content": "Haha", "author_id": 769,
-    #                       "time": "2017-06-05"}]}
 
 
 def like_trend_l(trend_id, user_id):
@@ -172,16 +138,17 @@ def create_circle_l(circle):
     return
 
 
-def get_all_circle_l(school_id):
-    return [{"circle_id": 4, "circle_name": "Camping is our life",
-             "icon": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-0/c68.0.160.160/"
-                     "p160x160/15349565_10208953025636274_6871502128788396568_n.jpg?o"
-                     "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
-             "introduction": "This group is like wolf of wall street. there’s buying "
-                             "and selling, cutthroat competition and drugs. it’s a stock exchange",
-             "announcement": "Buy and cell", "admin_id": 12, "admin_name": "Harden"},
-            {"circle_id": 5, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
-             "announcement": "", "admin_id": 1, "admin_name": "Rudy"}]
+def get_all_circle_l(user_id):
+    return find_circles_not_join(user_id)
+    # return [{"circle_id": 4, "circle_name": "Camping is our life",
+    #          "icon": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-0/c68.0.160.160/"
+    #                  "p160x160/15349565_10208953025636274_6871502128788396568_n.jpg?o"
+    #                  "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
+    #          "introduction": "This group is like wolf of wall street. there’s buying "
+    #                          "and selling, cutthroat competition and drugs. it’s a stock exchange",
+    #          "announcement": "Buy and cell", "admin_id": 12, "admin_name": "Harden"},
+    #         {"circle_id": 5, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
+    #          "announcement": "", "admin_id": 1, "admin_name": "Rudy"}]
 
 
 def join_circle_l(circle_id, user_id):
