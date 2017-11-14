@@ -89,7 +89,9 @@ def create_moment_l(moment):
 
 
 def get_comment_momment_l(moment_id):
+    print(moment_id)
     comments = find_comments_of_moment(moment_id)
+    print(str(comments))
     return comments
 
 
@@ -103,7 +105,6 @@ def get_my_trend_l(user_id):
 
 def get_trend_l(trend_id, user_id=-1):
     trend = find_trend_comments(trend_id, user_id)
-    print(str(trend))
     return trend
 
 
@@ -138,17 +139,8 @@ def create_circle_l(circle):
     return
 
 
-def get_all_circle_l(user_id):
+def get_all_circle_l(user_id, school_id):
     return find_circles_not_join(user_id)
-    # return [{"circle_id": 4, "circle_name": "Camping is our life",
-    #          "icon": "https://scontent-iad3-1.xx.fbcdn.net/v/t1.0-0/c68.0.160.160/"
-    #                  "p160x160/15349565_10208953025636274_6871502128788396568_n.jpg?o"
-    #                  "h=a76b7e9557d6becbcf79f447600076c8&oe=5AA1F873",
-    #          "introduction": "This group is like wolf of wall street. there’s buying "
-    #                          "and selling, cutthroat competition and drugs. it’s a stock exchange",
-    #          "announcement": "Buy and cell", "admin_id": 12, "admin_name": "Harden"},
-    #         {"circle_id": 5, "circle_name": "Photography Beginners", "icon": "", "introduction": "",
-    #          "announcement": "", "admin_id": 1, "admin_name": "Rudy"}]
 
 
 def join_circle_l(circle_id, user_id):

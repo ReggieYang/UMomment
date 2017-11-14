@@ -58,6 +58,7 @@ def login_student():
     student = login(student_id, password)
     if student is not None:
         session['user'] = student
+        print(str(session['user']))
         return redirect('/student/')
 
     else:
@@ -116,8 +117,9 @@ def create_new_circle():
 
 @application.route('/circle/', methods=['GET'])
 def get_circle_school():
+    user_id = session['user']['user_id']
     school_id = session['user']['school_id']
-    circles = get_all_circle_l(school_id)
+    circles = get_all_circle_l(user_id, school_id)
     context = dict(circles=circles)
     return render_template('circle.html', **context)
 
@@ -218,6 +220,7 @@ def get_all_moment():
 def get_moment_comment():
     comments = get_comment_momment_l(request.form['moment_id'])
     session['comments'] = comments
+    print('session: ' + str(comments))
     return 'success'
 
 
@@ -244,9 +247,7 @@ if __name__ == '__main__':
         """
 
         HOST, PORT = host, port
-        print("running on %s:%d" % (HOST, PORT))
         application.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
-        # application.run(host='127.0.0.1', port=6565, debug=True)
 
 
     run()

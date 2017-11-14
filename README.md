@@ -2,6 +2,7 @@
 
 ##TODO
 Y:
+modal can not be updated by session
 
 X:
 
