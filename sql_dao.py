@@ -20,17 +20,6 @@ trendcomment = Table('trendcomment', metadata, autoload=True)
 school = Table('school', metadata, autoload=True)
 
 
-# add quote to str data, add no quote to nonstr data, return the data.
-# def quotevalue(value):
-#     statement = ''
-#     if type(value) == type('a'):
-#         statement += "'"
-#     statement += str(value)
-#     if type(value) == type('a'):
-#         statement += "'"
-#     return statement
-
-
 # return the dict form of attribute and value of one-line sql result
 def row2dict(row):
     d = {}
@@ -67,10 +56,6 @@ def create_student(info):
     statement = statement[0:-1]
     statement += ')'
     db.execute(statement, data)
-    # i = student.insert()
-    # i.execute(user_id=s['user_id'], nick_name=s['nick_name'], avatar=s['avatar'], school_id=s['school_id'],
-    #           since=s['since'], email=s['email'], password=s['password'],
-    #           introduction=s['introduction'])
     return
 
 
@@ -80,8 +65,6 @@ def find_student(id):
     result = select([studentinfo, school.c.school_name], school.c.school_id==studentinfo.c.school_id)
     resultExe = result.execute()
     rs = resultExe.fetchone()
-    # s = {'user_id': rs.user_id, 'nick_name': rs.nick_name, 'avatar': rs.avatar, 'school_id': rs.school_id,
-    #      'since': rs.since, 'email': rs.email, 'password': rs.password, 'introduction': rs.introduction}
     s = row2dict(rs)
     return s
 
@@ -149,7 +132,6 @@ def find_my_followers(userid):
 
 
 # insert new circle
-# info = {'circle_id':10, 'circle_name':'yes', 'introduction':'Test for post circle', 'school_id':5, 'admin_id':4}
 def post_circle(info):
     data = []
     statement = "INSERT INTO circle ("
@@ -220,7 +202,6 @@ def find_moments(userid):
 
 
 # insert new moment
-# info = {'moment_id':55, 'author_id': 5, 'content': 'yeah', 'time':'2017-10-09 19:28:30.824310'}
 def insert_moment(info):
     data = []
     statement = "INSERT INTO moment ("
@@ -240,7 +221,6 @@ def insert_moment(info):
 
 
 # insert new likingmoment
-# info = {'user_id':9, 'moment_id':41, 'time':'2017-10-09 19:42:43.579866'}
 def like_moment(info):
     data = []
     statement = "INSERT INTO likingmoment ("
@@ -270,7 +250,6 @@ def unlike_moment(userid, momentid):
 
 
 # insert new record on momentcomment
-# info = {'comment_id':12,'author_id':9,'to_user':1,'moment_id':55,'content':'yyyy','time':'2017-10-09 21:38:44.677678'}
 def comment_moment(info):
     data = []
     statement = "INSERT INTO momentcomment ("
@@ -327,7 +306,6 @@ def find_trend_comments(trendid, userid):
 
 
 # insert new trend into table trend
-# info = {'trend_id':11, 'author_id':4, 'circle_id':2, 'content':'yyyy', 'time':'2017-10-09 21:47:31.127708'}
 def post_trend(info):
     data = []
     statement = "INSERT INTO trend ("
@@ -376,7 +354,6 @@ def unlike_trend(userid, trendid):
 
 
 # insert new comment on trend, giving the authorid, trendid, content and time
-# info = {'comment_id': 13, 'author_id': 6, 'trend_id': 11, 'content': 'nnnn', 'time': '2017-10-09 21:47:31.127708'}
 def comment_trend(info):
     data = []
     statement = "INSERT INTO trendcomment ("
