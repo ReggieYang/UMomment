@@ -1,6 +1,6 @@
 import datetime
 
-from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
+from sql_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
     find_my_followings, find_my_followers, find_all_schools, create_student, insert_moment, unlike_moment, like_moment, \
     comment_trend, comment_moment, post_trend, like_trend, unlike_trend, post_circle, join_circle, find_circles_join, \
     find_moments, find_comments_of_moment, find_trend_comments, find_trends_in_circles, find_circles_not_join
