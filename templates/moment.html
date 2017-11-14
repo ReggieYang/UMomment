@@ -34,7 +34,9 @@
     </div>
     {% for d in moments:%}
     <div class="card momment-card">
+        {% if d['image'] != None: %}
         <img class="card-img-top" src={{d['image']}}>
+        {% endif %}
         <div class="card-block">
             <div class="row">
                 <div class="col-6">
@@ -59,12 +61,13 @@
                 <div class="col-2">
                     <div class="row">
                         <div class="col-4"><h4 style="text-align: right">@</h4></div>
-                        <div class="col-8"><input type="text" id="to_user" name='to_user' class="form-control"></div>
+                        <div class="col-8"><input type="text" id="to-user-{{d['moment_id']}}" name='to_user'
+                                                  class="form-control"></div>
                     </div>
                 </div>
 
                 <div class="col-4">
-                    <input type="text" id="comment-content-{{d['moment_id']}}" class="form-control" required autofocus>
+                    <input type="text" id="comment-content-{{d['moment_id']}}" class="form-control" required>
                 </div>
                 <div class="col-2">
                     <label class="btn btn-primary comment-button" id="comment-{{d['moment_id']}}">comment</label>
@@ -85,25 +88,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">Comments</h4>
             </div>
-            <div class="modal-body">
-                {% for c in session['comments']: %}
-                <div class="card momment-card">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="col-4">
-                                <p class="card-text">{{c['author_name']}}</p>
-                            </div>
-                            <div class="col-4">
-                                <p class="card-text">@{{c['to_user']}}</p>
-                            </div>
-                            <div class="col-4">
-                                <p class="card-text">{{c['time']}}</p>
-                            </div>
-                        </div>
-                        <p class="card-text">{{c['content']}}</p>
-                    </div>
-                </div>
-                {% endfor %}
+            <div class="modal-body" id="modal-content">
             </div>
         </div>
     </div>
@@ -135,7 +120,7 @@
     $(".comment-button").click(function () {
         var moment_id = $(this).attr('id').split("-")[1];
         let comment_content = $("#comment-content-" + moment_id).val();
-        let to_user = $("#to_user").val();
+        let to_user = $("#to-user-" + moment_id).val();
         let jsonData = {"moment_id": moment_id, "content": comment_content, "to_user": to_user};
         $.ajax({
             type: 'POST',
@@ -144,7 +129,7 @@
             data: jsonData,
             success: (res) => {
                 $("#comment-content-" + moment_id).val("");
-                $("#to_user").val("");
+                $("#to-user-" + moment_id).val("");
             }
         });
     });
@@ -158,6 +143,7 @@
             dataType: "text",
             data: jsonData,
             success: (res) => {
+                $("#modal-content").html(res);
                 $("#comments-modal").modal();
             }
         });

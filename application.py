@@ -57,7 +57,6 @@ def login_student():
     student = login(student_id, password)
     if student is not None:
         session['user'] = student
-        print(str(session['user']))
         return redirect('/student/')
 
     else:
@@ -218,9 +217,7 @@ def get_all_moment():
 @application.route('/moment/findComment/', methods=['POST'])
 def get_moment_comment():
     comments = get_comment_momment_l(request.form['moment_id'])
-    session['comments'] = comments
-    print('session: ' + str(comments))
-    return 'success'
+    return render_template("moment_comment_card.html", comments=comments)
 
 
 if __name__ == '__main__':
