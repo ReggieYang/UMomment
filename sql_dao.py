@@ -194,7 +194,7 @@ def find_all_schools():
 
 # find the moments of mine and the people I follow
 def find_moments(userid):
-    statement = "SELECT moment.*, s1.nick_name, like_new_moment.like_or_not, like_new_moment.liking_count FROM moment, (SELECT new_moment.moment_id, CASE %s IN (SELECT lm.user_id FROM likingmoment lm WHERE lm.moment_id = new_moment.moment_id) WHEN TRUE THEN 1 ELSE 0 END AS like_or_not, count(likingmoment.user_id) AS liking_count FROM (SELECT moment.* FROM moment, (SELECT DISTINCT followed_id AS user_id FROM followership WHERE followed_id = %s OR follower_id = %s) AS friend WHERE moment.author_id = friend.user_id ORDER BY moment.time) AS new_moment LEFT JOIN likingmoment ON new_moment.moment_id = likingmoment.moment_id GROUP BY new_moment.moment_id) AS like_new_moment, student s1 WHERE moment.moment_id = like_new_moment.moment_id AND moment.author_id = s1.user_id ORDER BY liking_count DESC"
+    statement = "SELECT moment.*, s1.nick_name, like_new_moment.like_or_not, like_new_moment.liking_count FROM moment, (SELECT new_moment.moment_id, CASE %s IN (SELECT lm.user_id FROM likingmoment lm WHERE lm.moment_id = new_moment.moment_id) WHEN TRUE THEN 1 ELSE 0 END AS like_or_not, count(likingmoment.user_id) AS liking_count FROM (SELECT moment.* FROM moment, (SELECT DISTINCT followed_id AS user_id FROM followership WHERE followed_id = %s OR follower_id = %s) AS friend WHERE moment.author_id = friend.user_id ORDER BY moment.time) AS new_moment LEFT JOIN likingmoment ON new_moment.moment_id = likingmoment.moment_id GROUP BY new_moment.moment_id) AS like_new_moment, student s1 WHERE moment.moment_id = like_new_moment.moment_id AND moment.author_id = s1.user_id ORDER BY moment.time DESC"
     data = [userid, userid, userid]
     result = db.execute(statement, data)
     d = multirow2listdict(result)
@@ -273,7 +273,7 @@ def find_trends_in_circles(userid):
     circleid = membership.select(membership.c.member_id == userid).alias("circleid")
     trends = trend.select(circleid.c.circle_id == trend.c.circle_id).alias("trends")
     rs = select([student.c.nick_name, circle.c.circle_name, trends],
-                (student.c.user_id == trends.c.author_id) & (circle.c.circle_id == trends.c.circle_id))
+                (student.c.user_id == trends.c.author_id) & (circle.c.circle_id == trends.c.circle_id)).order_by(desc(trends.c.time))
     result = rs.execute()
     d = multirow2listdict(result)
     return d
