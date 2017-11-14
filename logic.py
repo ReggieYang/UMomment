@@ -8,7 +8,6 @@ from dao.student_dao import find_student, update_student, follow, unfollow, find
 
 def login(student_id, password):
     student = find_student(student_id)
-    print(str(student))
     if student['password'] == password:
         return student
     else:
