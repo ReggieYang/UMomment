@@ -76,7 +76,8 @@ def create_student(info):
 
 # search student info in student table with student_id
 def find_student(id):
-    result = student.select(student.c.user_id == id)
+    studentinfo = student.select(student.c.user_id == id).alias("studentinfo")
+    result = select([studentinfo, school.c.school_name], school.c.school_id==studentinfo.c.school_id)
     resultExe = result.execute()
     rs = resultExe.fetchone()
     # s = {'user_id': rs.user_id, 'nick_name': rs.nick_name, 'avatar': rs.avatar, 'school_id': rs.school_id,
