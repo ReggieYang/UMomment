@@ -1,5 +1,4 @@
 import os
-import datetime
 from flask import Flask, request, render_template, session, redirect
 from flask_cors import CORS
 from logic import login, update_student_l, follow_l, unfollow_l, get_my_moment, like_moment_l, unlike_moment_l, \

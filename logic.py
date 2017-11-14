@@ -1,5 +1,3 @@
-import json
-
 import datetime
 
 from dao.student_dao import find_student, update_student, follow, unfollow, find_student_by_nickname, \
@@ -10,6 +8,7 @@ from dao.student_dao import find_student, update_student, follow, unfollow, find
 
 def login(student_id, password):
     student = find_student(student_id)
+    print(str(student))
     if student['password'] == password:
         return student
     else:
@@ -89,9 +88,7 @@ def create_moment_l(moment):
 
 
 def get_comment_momment_l(moment_id):
-    print(moment_id)
     comments = find_comments_of_moment(moment_id)
-    print(str(comments))
     return comments
 
 
@@ -140,7 +137,7 @@ def create_circle_l(circle):
 
 
 def get_all_circle_l(user_id, school_id):
-    return find_circles_not_join(user_id)
+    return find_circles_not_join(user_id, school_id)
 
 
 def join_circle_l(circle_id, user_id):
