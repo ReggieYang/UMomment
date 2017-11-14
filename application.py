@@ -171,7 +171,8 @@ def comment_on_trend():
 @application.route('/trendDetail/', methods=['GET'])
 def get_trend():
     trend_id = request.args.get('trend_id')
-    trend = get_trend_l(trend_id)
+    user_id = session['user']['user_id']
+    trend = get_trend_l(trend_id, user_id)
     context = dict(trend=trend)
     return render_template('trend_detail.html', **context)
 

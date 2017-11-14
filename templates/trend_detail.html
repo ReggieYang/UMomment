@@ -40,12 +40,12 @@
             <div class="sidebar-module sidebar-module-inset">
                 <div class="row">
                     <div class="col-6">
-                        <h4 id='like-count'>{{trend['trend']['like_count']}} Likes</h4>
+                        <h4 id='like-count'>{{trend['trend']['count']}} Likes</h4>
                     </div>
                     <div class="col-6">
                         <label class="btn btn-primary like-button comments w-50 p-1"
                                id="like-{{trend['trend']['trend_id']}}">
-                            {% if trend['trend']['like'] == 0: %}
+                            {% if trend['trend']['like_or_not'] == 0: %}
                             like
                             {% else: %}
                             unlike
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <h4>Comments</h4>
-                {% for c in trend['comments']: %}
+                {% for c in trend['comment']: %}
                 <div class="card momment-card">
                     <div class="card-block">
                         <div class="row">
