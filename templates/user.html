@@ -35,9 +35,8 @@
                required>
 
         <label for="school_id">School</label>
-        <input type="text" readonly="true" value='{{session["user"]["school_name"]}}' id="school_id" name='school_id'
-               class="form-control"
-               required>
+        <input type="text" readonly="true" value='{{session["user"]["school_name"]}}' id="school_id" name='school'
+               class="form-control">
 
         <label for="password">Password</label>
         <input type="password" value='{{session["user"]["password"]}}' id="password" name='password'

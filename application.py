@@ -65,7 +65,7 @@ def login_student():
 
 @application.route('/student/update/', methods=['POST'])
 def update_st():
-    args = ['user_id', "nick_name", "avatar", "school_id", "since", "email", "password",
+    args = ['user_id', "nick_name", "avatar", "since", "email", "password",
             "introduction"]
     student = args2dict(request, args)
     update_student_l(student)
