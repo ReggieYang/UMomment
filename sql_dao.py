@@ -112,6 +112,8 @@ def find_student_by_nickname(nickname):
     result = student.select(student.c.nick_name == nickname)
     resultExe = result.execute()
     rs = resultExe.fetchone()
+    if rs is None:
+        return None
     s = {}
     s['user_id'] = rs.user_id
     return s
