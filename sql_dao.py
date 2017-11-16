@@ -22,6 +22,8 @@ school = Table('school', metadata, autoload=True)
 
 # return the dict form of attribute and value of one-line sql result
 def row2dict(row):
+    if row is None:
+        return None
     d = {}
     for rs in row.keys():
         d[rs] = row[rs]
@@ -31,6 +33,8 @@ def row2dict(row):
 # return the list form of attribute and value of multi=-lines sql results.
 # each result in one dict
 def multirow2listdict(row):
+    if row is None:
+        return None
     list = []
     for rs in row:
         dict = {}
