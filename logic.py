@@ -8,7 +8,7 @@ from sql_dao import find_student, update_student, follow, unfollow, find_student
 
 def login(student_id, password):
     student = find_student(student_id)
-    if student['password'] == password:
+    if student is not None and student['password'] == password:
         return student
     else:
         return None
@@ -60,6 +60,7 @@ def get_my_moment(user_id):
     moments = find_moments(user_id)
     for i in range(0, len(moments)):
         moments[i]['time'] = moments[i]['time'].strftime("%Y-%m-%d %H:%M")
+    print(moments)
     return moments
 
 

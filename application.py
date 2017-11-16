@@ -36,6 +36,8 @@ def register_student():
     args = ["nick_name", "avatar", "email", "password",
             "introduction", "school_id"]
     student = args2dict(request, args)
+    if len(student['password']) <= 6:
+        return render_template('error.html')
     new_student = create_student_l(student)
     session['user'] = new_student
     return redirect('/student/')
@@ -68,6 +70,8 @@ def update_st():
     args = ['user_id', "nick_name", "avatar", "since", "email", "password",
             "introduction"]
     student = args2dict(request, args)
+    if len(student['password']) <= 6:
+        return render_template('error.html')
     update_student_l(student)
     user_id = request.form['user_id']
     password = request.form['password']
@@ -89,6 +93,14 @@ def set_followship():
     else:
         following_name = request.form['follower_name']
         following = get_student_by_name(following_name)
+
+        fw = my_following(follower)
+        for f in fw:
+            if f['nick_name'] == following_name:
+                return render_template('error.html')
+
+        if following is None:
+            return render_template('error.html')
         if 'user_id' in following:
             follow_l(follower, following['user_id'])
         return redirect('/discover/')
