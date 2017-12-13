@@ -299,7 +299,6 @@ def find_trend_comments(trendid, userid):
     statement = "SELECT x.trend_id, x.nick_name, x.circle_name, x.content, x.image, x.time, x.nick_name, x.author_id, x.circle_id, count(lt1.user_id), CASE # IN (SELECT lt2.user_id FROM likingtrend lt2 WHERE lt2.trend_id = @) WHEN TRUE THEN 1 ELSE 0 END AS like_or_not FROM (SELECT t1.*, c1.circle_name, s1.nick_name FROM trend t1, circle c1, student s1 WHERE t1.trend_id = @ AND t1.circle_id = c1.circle_id AND s1.user_id = t1.author_id) AS x LEFT JOIN likingtrend lt1 ON lt1.trend_id = x.trend_id GROUP BY x.trend_id, x.circle_name, x.nick_name, x.content, x.image, x.time, x.author_id, x.circle_id"
     statement = statement.replace("@", str(trendid))
     statement = statement.replace("#", str(userid))
-    print(statement)
     result = {}
     trendone = db.execute(statement)
     result["trend"] = multirow2listdict(trendone)[0]

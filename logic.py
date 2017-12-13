@@ -60,7 +60,6 @@ def get_my_moment(user_id):
     moments = find_moments(user_id)
     for i in range(0, len(moments)):
         moments[i]['time'] = moments[i]['time'].strftime("%Y-%m-%d %H:%M")
-    print(moments)
     return moments
 
 

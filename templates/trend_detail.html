@@ -22,7 +22,11 @@
 </header>
 
 <main role="main" class="container">
+    {% if trend['trend']['image'] != None: %}
+    {% if trend['trend']['image'] != "" %}
     <img src="{{trend['trend']['image']}}" class="img-fluid" alt="Responsive image">
+    {% endif %}
+    {% endif %}
     <div class="row">
         <div class="col-sm-8 blog-main">
             <div class="blog-post">
